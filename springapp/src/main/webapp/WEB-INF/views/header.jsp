@@ -1,7 +1,7 @@
   <header class="mcapp-header">
   <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-header">
-          <a href="/springapp/welcome.html" class="navbar-brand mcapp-navbar-brand">Pasatiempos</a>
+          <a href="/springapp/welcome.html" class="navbar-brand mcapp-navbar-brand"><spring:message code="title"></spring:message></a>
           <button id='btnHamburger' type="button" onclick='javascript:hamburger()' class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-collapse">
                <span class="icon-bar mcbar mcbar-sup"></span>
                <span class="icon-bar mcbar mcbar-med"></span>
@@ -11,14 +11,14 @@
 	  <div id="navbarCollapse" class="collapse navbar-collapse">
 		  <security:authorize access="isAnonymous()">
 	          <ul class="nav navbar-nav navbar-right">
-	              <li><a href="/springapp/registration.html"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> Registrarme</a></li>
-	              <li><a href="javascript:showLogin()"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Iniciar sesión</a></li>
+	              <li><a href="/springapp/registration.html"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i><spring:message code="header.register"></spring:message></a></li>
+	              <li><a href="javascript:showLogin()"><i class="fa fa-user fa-lg" aria-hidden="true"></i><spring:message code="header.login"></spring:message></a></li>
 	          </ul>
 		  </security:authorize>
 		  <security:authorize access="isAuthenticated()">
 		      <ul class="nav navbar-nav navbar-left">
-              	<li><a href="#"> Crucigrama</a></li>
-              	<li><a href="#"> Sopa de letras</a></li>
+              	<li><a href="/springapp/crossword.html"> <spring:message code="crossword.title"></spring:message></a></li>
+              	<li><a href="/springapp/wordsearch.html"> <spring:message code="wordsearch.title"></spring:message></a></li>
           	  </ul>
 	          <ul class="nav navbar-nav navbar-right">
 	              <li><p class="navbar-text"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Hola <security:authentication property="principal.username" /></p></li>

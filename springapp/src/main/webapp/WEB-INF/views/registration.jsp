@@ -5,8 +5,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 	<title><spring:message code="register.title"></spring:message></title>
 	<%@ include file="/WEB-INF/views/includeFiles.jsp" %>
-	<link href="<c:url value="/resources/css/mcapp-main.css" />" rel="stylesheet">
-	<script src="<c:url value="/resources/js/mcapp-main.js" />"></script>
 	<script src="<c:url value="/resources/js/registration.js" />"></script>
 </head>
 <body>

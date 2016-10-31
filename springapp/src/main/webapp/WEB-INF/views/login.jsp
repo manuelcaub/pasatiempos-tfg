@@ -2,8 +2,6 @@
 
 <html lang="es">
 <head>
-	<link href="<c:url value="/resources/css/mcapp-main.css" />" rel="stylesheet">
-    <script src="<c:url value="/resources/js/mcapp-main.js" />"></script>
     <%@ include file="/WEB-INF/views/includeFiles.jsp" %>
     <title>Inicie sesión con su cuenta</title>
 </head>
