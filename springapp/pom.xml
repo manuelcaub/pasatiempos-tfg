@@ -116,6 +116,13 @@
 	    <artifactId>spring-security-taglibs</artifactId>
 	    <version>${org.springframework.security.version}</version>
 	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-base -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+	    <artifactId>jackson-jaxrs-base</artifactId>
+	    <version>2.6.3</version>
+	</dependency>
   </dependencies>
   <build>
     <finalName>springapp</finalName>

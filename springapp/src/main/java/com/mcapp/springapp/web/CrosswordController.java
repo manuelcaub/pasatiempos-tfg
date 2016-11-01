@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mcapp.springapp.common.dto.UsuarioDto;
@@ -23,5 +24,11 @@ public class CrosswordController {
         model.addAttribute("usuarioLogin", new UsuarioDto());
         model.addAttribute("crucigrama", new JSONObject(this.srvCrossword.generateCrossword(4, 20)));
 	    return new ModelAndView("crossword");
+	}
+	
+	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET)
+	@ResponseBody
+	public String getNewCrossword () { 
+        return new JSONObject(this.srvCrossword.generateCrossword(4, 20)).toString();
 	}
 }
