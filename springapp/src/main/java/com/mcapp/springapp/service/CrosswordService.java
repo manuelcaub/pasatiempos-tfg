@@ -39,6 +39,8 @@ public class CrosswordService implements ICrosswordService {
 		Collections.shuffle(words);
 
 		if(this.backtracking(crossword, words)){
+			// Después de generar el crucigrama, se establecen las palabras verticales ya que no han sido
+			// establecidas en el algoritmo (simplemente comprobadas).
 			for(Word w : crossword.getBoardWords().stream().filter(x -> x.isVertical()).collect(Collectors.toList())) {
 				StringBuilder str = new StringBuilder();
 				for(int i = w.getRow(); i < w.getRow() + w.getLength(); i++){
@@ -46,6 +48,11 @@ public class CrosswordService implements ICrosswordService {
 				}
 				
 				w.setWord(str.toString());
+			}
+			
+			// Se establecen las definiciones de las palabras.
+			for(Word w : crossword.getBoardWords()) {
+				w.setDefinition(this.daoPalabra.getDefinicion(w.getWord()));
 			}
 			
 			return crossword;

@@ -15,4 +15,6 @@ public interface IPalabraService {
 	public List<String> getPalabras();
 	
 	public List<PalabraDto> getPalabrasDtoByMaxLength(int longitud);
+	
+	public String getDefinicion(String palabra);
 }

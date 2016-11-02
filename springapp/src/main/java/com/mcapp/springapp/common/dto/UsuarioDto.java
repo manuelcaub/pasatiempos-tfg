@@ -28,7 +28,6 @@ public class UsuarioDto {
 		this.id = usuario.getId();
 		this.nombre = usuario.getNombre();
 		this.email = usuario.getEmail();
-		// this.pais = usuario.getPais().getNombre();
 		this.password = usuario.getPassword();
 		this.setRoles(usuario.getRoles().stream().map(x -> x.getNombre()).collect(Collectors.toList()));
 	}

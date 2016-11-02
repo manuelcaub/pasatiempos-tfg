@@ -1,6 +1,7 @@
 package com.mcapp.springapp.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -45,5 +46,14 @@ public class PalabraServiceTests {
         assertTrue(Palabras.get(0).getClass().equals(PalabraDto.class));
         assertNotNull(Palabras.get(0).getIdioma());
         assertTrue(Palabras.get(0).getDefiniciones().size() > 0);
+    }
+    
+    @Test
+    public void testGetDefinicion() {
+    	String definiciones = this.srvPalabra.getDefinicion("A");
+    	assertNotNull(definiciones);
+    	
+    	String definicionesNull = this.srvPalabra.getDefinicion("aasdfasdwerdfvxzc");
+    	assertNull(definicionesNull);
     }
 }

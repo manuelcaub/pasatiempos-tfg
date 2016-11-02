@@ -7,6 +7,7 @@ public class Word {
 	private final Direction direction;
 	private String word;
 	private int length;
+	private String definition;
 
 	public Word(Position pos, Direction direction, int length) {
 		this.pos = pos;
@@ -46,6 +47,14 @@ public class Word {
 
 	public void setWord(String word) {
 		this.word = word;
+	}
+
+	public String getDefinition() {
+		return definition;
+	}
+
+	public void setDefinition(String definition) {
+		this.definition = definition;
 	}
 
 	public int getLength() {

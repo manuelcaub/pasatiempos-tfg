@@ -33,5 +33,9 @@ public class PalabraService implements IPalabraService {
 	public List<PalabraDto> getPalabrasDtoByMaxLength(int longitud) {
 		return this.daoPalabra.getPalabrasByMaxLength(longitud);
 	}
+	
+	public String getDefinicion(String palabra) {
+		return this.daoPalabra.getDefinicion(palabra);
+	}
 
 }

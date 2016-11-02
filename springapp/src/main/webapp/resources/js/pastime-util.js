@@ -38,7 +38,13 @@ function insertWords(words) {
 	for(var i = 0; i < hwords.length; i++) {
 		var formgroup = $('<div class="form-group"></div>');
 		formgroup.append('<label for="word-input' + i + '">' + hwords[i].word + '</label>');
-		formgroup.append('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		var inputword = $('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		if(typeof hwords[i].definition != 'undefined') {
+			inputword.attr("value", hwords[i].definition);
+			inputword.prop("disabled", true);
+		}
+
+		formgroup.append(inputword);
 		formwords.append(formgroup);
 	}
 	
@@ -46,7 +52,13 @@ function insertWords(words) {
 	for(var i = 0; i < vwords.length; i++) {
 		var formgroup = $('<div class="form-group"></div>');
 		formgroup.append('<label for="word-input' + i + '">' + vwords[i].word + '</label>');
-		formgroup.append('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		var inputword = $('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		if(typeof vwords[i].definition != 'undefined') {
+			inputword.attr("value", vwords[i].definition);
+			inputword.prop("disabled", true);
+		}
+
+		formgroup.append(inputword);
 		formwords.append(formgroup);
 	}
 	

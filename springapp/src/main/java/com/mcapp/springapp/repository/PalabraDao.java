@@ -28,9 +28,20 @@ public class PalabraDao extends AbstractDao<Palabra> {
 	public List<PalabraDto> getPalabrasByMaxLength(int longitud) {
 		@SuppressWarnings("unchecked")
 		List<Palabra> palabras = (List<Palabra>) this.getSessionFactory().getCurrentSession()
-				.createQuery("from Palabra as p left outer join fetch p.definiciones where p.longitud < :longitud")
+				.createQuery("from Palabra as p where p.longitud < :longitud")
 				.setParameter("longitud", longitud).getResultList();
 		
 		return palabras.parallelStream().map(PalabraDto::new).collect(Collectors.toList());
+	}
+	
+	@Transactional(readOnly = true)
+	public String getDefinicion(String palabra) {
+		String sql = "SELECT d.valor"+
+		          " FROM   palabra p"+
+		          "       JOIN palabradefinicion pd ON p.id = pd.palabra"+
+		          "       JOIN definicion d ON d.id = pd.definicion"+
+		          " WHERE  p.valor LIKE :palabra order by rand() limit 1;";
+		
+		return (String)this.getSessionFactory().getCurrentSession().createNativeQuery(sql).setParameter("palabra", palabra).getResultList().stream().findFirst().orElse(null);
 	}
 }
