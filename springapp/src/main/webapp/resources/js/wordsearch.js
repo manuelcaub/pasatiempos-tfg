@@ -5,8 +5,14 @@ var grosor = 2;  // Grosor del borde de cada casilla
 var fontSize = ancho/2;
 var namespace="http://www.w3.org/2000/svg";
 
-function createWordSearch(jsonText) {
-    var obj = JSON.parse(jsonText);
+function createWordSearch(jsonObject) {
+	var obj;
+	if(typeof jsonObject == "string") {
+		obj = JSON.parse(jsonObject);
+	} else {
+		obj = jsonObject;
+	}
+	
     var tablero=new Tablero(obj.board);
     tablero.draw();
 }

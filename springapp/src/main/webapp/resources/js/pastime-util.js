@@ -22,3 +22,16 @@ function newCrossword() {
 	    });
 	}
 }
+
+function newWordSearch() {
+	if($("input#input-size").is(":valid") && $("input#input-words").is(":valid")) {
+	    $.get({
+	        url : 'newwordsearch.html',
+	        dataType : 'json',
+	        data: { size: document.getElementById("input-size").value, words: document.getElementById("input-words").value },
+	        success : function(data) {
+	        	createWordSearch(data);
+	        }
+	    });
+	}
+}
