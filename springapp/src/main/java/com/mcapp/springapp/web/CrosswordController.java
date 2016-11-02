@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,9 +27,9 @@ public class CrosswordController {
 	    return new ModelAndView("crossword");
 	}
 	
-	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET)
+	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET, params = {"size", "blacks"})
 	@ResponseBody
-	public String getNewCrossword () { 
-        return new JSONObject(this.srvCrossword.generateCrossword(4, 20)).toString();
+	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("blacks") int blacks) { 
+        return new JSONObject(this.srvCrossword.generateCrossword(size, blacks)).toString();
 	}
 }
