@@ -27,7 +27,7 @@
 			                <label for="input-blacks">Celdas negras (%)</label>
 			                <input class="form-control input-sm" id="input-blacks" type="text" required>
 			              </div>
-			            </form>          				
+			            </form>
           			</div>
         		</div>
         		<div id="collapse1" class="panel-collapse collapse">

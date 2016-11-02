@@ -18,7 +18,6 @@ function newCrossword() {
 	        data: { size: document.getElementById("input-size").value, blacks: document.getElementById("input-blacks").value },
 	        success : function(data) {
 	        	createCrossword(data);
-	            $('#mySvg').html(data);
 	        }
 	    });
 	}

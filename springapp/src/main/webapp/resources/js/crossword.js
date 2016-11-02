@@ -1,13 +1,14 @@
-        var ancho = 25;  // Ancho de cada casilla
-        var alto = 25;    // Alto de cada casilla
+        var ancho = 30;  // Ancho de cada casilla
+        var alto = 30;    // Alto de cada casilla
         var grosor = 2;  // Grosor del borde de cada casilla
         var fontSize = ancho/2;
         var namespace="http://www.w3.org/2000/svg";
 
-        function Tablero(texto) {
+        function Tablero(texto, palabras) {
             this.filas=texto.length;
             this.columnas=texto[0].length;
             this.texto=texto;
+            this.palabras=palabras;
         }
 
         Tablero.prototype.draw = function() {
@@ -21,11 +22,30 @@
                     lienzo.appendChild(casilla.grupo);
                 }
             }
+            
+            var x=[];
+            for (var i=0; i<this.palabras.length; i++){
+                var centroX=this.palabras[i].col*ancho+ancho/2;
+                var centroY=this.palabras[i].row*alto+alto/2;
+                var id = this.palabras[i].row +""+this.palabras[i].col;
+                if($.inArray(id, x) == -1){
+                	x.push(id);
+                	var grupo = lienzo.getElementById(id);
+                    var caja=document.createElementNS(namespace, "text");
+                    caja.setAttribute("contentEditable", "true");
+                    caja.setAttribute("fill", "black");
+                    caja.setAttribute("font-size", ancho*0.002);
+                    caja.innerHTML=x.length;
+                    caja.setAttribute("x", centroX - 0.45*ancho);
+                    caja.setAttribute("y", centroY - 0.3*alto);
+                    grupo.appendChild(caja);
+                }
+            }
         }
 
         function Casilla(fila, columna, letra) {
             this.grupo=document.createElementNS(namespace, "g");
-
+            this.grupo.id = fila+""+columna
             var rect=document.createElementNS(namespace, "rect");
             rect.setAttribute("x", columna*ancho);
             rect.setAttribute("y", fila*alto);
@@ -60,6 +80,6 @@
         		obj = jsonObject;
         	}
         	
-            var tablero=new Tablero(obj.board);
+            var tablero=new Tablero(obj.board, obj.boardWords);
             tablero.draw();
         }
