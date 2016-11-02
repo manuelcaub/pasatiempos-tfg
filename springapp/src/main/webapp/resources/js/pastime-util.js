@@ -18,9 +18,39 @@ function newCrossword() {
 	        data: { size: document.getElementById("input-size").value, blacks: document.getElementById("input-blacks").value },
 	        success : function(data) {
 	        	createCrossword(data);
+	        	insertWords(data.boardWords);
 	        }
 	    });
 	}
+}
+
+function insertWords(words) {
+	$("#panel-info").empty();
+	var formwords = $("<form></form>");
+	var vwords = words.filter(function(obj){
+		return obj.vertical;
+	});
+	var hwords = words.filter(function(obj){
+		return obj.horizontal;
+	});
+	
+	formwords.append('<h4>Horizontales</h4>');
+	for(var i = 0; i < hwords.length; i++) {
+		var formgroup = $('<div class="form-group"></div>');
+		formgroup.append('<label for="word-input' + i + '">' + hwords[i].word + '</label>');
+		formgroup.append('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		formwords.append(formgroup);
+	}
+	
+	formwords.append('<h4>Verticales</h4>');
+	for(var i = 0; i < vwords.length; i++) {
+		var formgroup = $('<div class="form-group"></div>');
+		formgroup.append('<label for="word-input' + i + '">' + vwords[i].word + '</label>');
+		formgroup.append('<input id="word-input' + i + '" class="form-control input-sm" type="text"></input>');
+		formwords.append(formgroup);
+	}
+	
+	$("#panel-info").append(formwords);
 }
 
 function newWordSearch() {

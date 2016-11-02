@@ -39,6 +39,15 @@ public class CrosswordService implements ICrosswordService {
 		Collections.shuffle(words);
 
 		if(this.backtracking(crossword, words)){
+			for(Word w : crossword.getBoardWords().stream().filter(x -> x.isVertical()).collect(Collectors.toList())) {
+				StringBuilder str = new StringBuilder();
+				for(int i = w.getRow(); i < w.getRow() + w.getLength(); i++){
+					str.append(crossword.getBoard()[i][w.getCol()]);
+				}
+				
+				w.setWord(str.toString());
+			}
+			
 			return crossword;
 		}
 		

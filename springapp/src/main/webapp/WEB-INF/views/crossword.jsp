@@ -31,13 +31,12 @@
           			</div>
         		</div>
         		<div id="collapse1" class="panel-collapse collapse">
-      				<div class="panel-body">Palabras</div>
+      				<div id="panel-info" class="panel-body"></div>
     			</div>
     		</div>
       		<div class="panel-footer"><button type="button" class="btn btn-default btn-xs"><i class="fa fa-cloud-upload"></i></button> <button type="button" onclick="javascript:newCrossword()" class="btn btn-default btn-xs"><i class="fa fa-refresh"></i></button> <button type="button" class="btn btn-default btn-xs"><i class="fa fa-times"></i></button></div>
     	</div>
   	</div>
   </div>
-  <script>createCrossword('${crucigrama}')</script>
 </body>
 </html>
