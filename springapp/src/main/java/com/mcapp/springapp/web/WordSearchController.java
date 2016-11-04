@@ -23,7 +23,6 @@ public class WordSearchController {
 	@RequestMapping(value = "/wordsearch", method = RequestMethod.GET)
 	public ModelAndView getWordSearchView (Model model) { 
         model.addAttribute("usuarioLogin", new UsuarioDto());
-        model.addAttribute("sopa", new JSONObject(this.srvWordSearch.generateWordSearchPuzzle(10, 10)));
 	    return new ModelAndView("wordsearch");
 	}
 	

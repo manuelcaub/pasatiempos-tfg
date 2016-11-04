@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -51,4 +52,8 @@ public abstract class AbstractDao<T> extends HibernateDaoSupport {
 	public List<T> find(String hql) {	
 		return (List<T>)this.getHibernateTemplate().find(hql);
 	} 
+	
+	public Session hibernate() {
+		return this.getSessionFactory().getCurrentSession();
+	}
 }

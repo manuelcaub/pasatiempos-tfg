@@ -27,7 +27,7 @@ public class PalabraDao extends AbstractDao<Palabra> {
 	@Transactional(readOnly = true)
 	public List<PalabraDto> getPalabrasByMaxLength(int longitud) {
 		@SuppressWarnings("unchecked")
-		List<Palabra> palabras = (List<Palabra>) this.getSessionFactory().getCurrentSession()
+		List<Palabra> palabras = (List<Palabra>) this.hibernate()
 				.createQuery("from Palabra as p where p.longitud < :longitud")
 				.setParameter("longitud", longitud).getResultList();
 		
@@ -42,6 +42,11 @@ public class PalabraDao extends AbstractDao<Palabra> {
 		          "       JOIN definicion d ON d.id = pd.definicion"+
 		          " WHERE  p.valor LIKE :palabra order by rand() limit 1;";
 		
-		return (String)this.getSessionFactory().getCurrentSession().createNativeQuery(sql).setParameter("palabra", palabra).getResultList().stream().findFirst().orElse(null);
+		return (String)this.hibernate().createNativeQuery(sql).setParameter("palabra", palabra).getResultList().stream().findFirst().orElse(null);
+	}
+
+	@Transactional(readOnly = true)
+	public Palabra getPalabraByValue(String palabra) {
+		return (Palabra)this.hibernate().createQuery("from Palabra as p where p.valor = :palabra").setParameter("palabra", palabra).getResultList().get(0);
 	}
 }

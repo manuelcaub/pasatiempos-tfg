@@ -3,12 +3,20 @@ package com.mcapp.springapp.common.dto;
 import org.json.JSONObject;
 
 public class Word {
-	private final Position pos;
-	private final Direction direction;
+	private Position pos;
+	private Direction direction;
 	private String word;
 	private int length;
 	private String definition;
 
+	public Word() {
+	}
+	
+	public Word(String word, String definition) {
+		this.word = word;
+		this.definition = definition;
+	}
+	
 	public Word(Position pos, Direction direction, int length) {
 		this.pos = pos;
 		this.direction = direction;

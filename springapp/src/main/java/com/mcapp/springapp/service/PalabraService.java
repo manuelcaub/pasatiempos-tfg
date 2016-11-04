@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.mcapp.springapp.common.dto.PalabraDto;
 import com.mcapp.springapp.domain.Definicion;
+import com.mcapp.springapp.domain.Palabra;
 import com.mcapp.springapp.repository.PalabraDao;
 import com.mcapp.springapp.service.interfaces.IPalabraService;
 
@@ -36,6 +37,12 @@ public class PalabraService implements IPalabraService {
 	
 	public String getDefinicion(String palabra) {
 		return this.daoPalabra.getDefinicion(palabra);
+	}
+
+	public void setDefinition(String word, String definition) {
+		Palabra palabra = this.daoPalabra.getPalabraByValue(word);
+		palabra.getDefiniciones().add(new Definicion(definition));
+		this.daoPalabra.saveOrUpdate(palabra);
 	}
 
 }

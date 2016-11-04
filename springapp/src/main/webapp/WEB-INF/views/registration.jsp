@@ -20,7 +20,6 @@
 								<span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
 								<form:input type="text" class="form-control" name="nombre" id="nombre" path="nombre" placeholder="${register.firstNamePH}" required="true"/>
 							</div>
-
 					</div>
 
 					<div class="form-group">

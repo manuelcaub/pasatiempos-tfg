@@ -23,6 +23,13 @@ public class Definicion implements Serializable {
 	@Column(name = "valor", nullable = false)
 	private String valor;
 
+	public Definicion() {
+	}
+	
+	public Definicion(String definition) {
+		this.valor = definition;
+	}
+
 	public int getId() {
 		return id;
 	}
