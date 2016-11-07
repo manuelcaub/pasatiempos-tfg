@@ -19,6 +19,7 @@
 		      <ul class="nav navbar-nav navbar-left">
               	<li><a href="/springapp/crossword.html"> <spring:message code="crossword.title"></spring:message></a></li>
               	<li><a href="/springapp/wordsearch.html"> <spring:message code="wordsearch.title"></spring:message></a></li>
+              	<li><a href="/springapp/mypuzzles.html"> <spring:message code="mypuzzles.title"></spring:message></a></li>
           	  </ul>
 	          <ul class="nav navbar-nav navbar-right">
 	              <li><p class="navbar-text"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Hola <security:authentication property="principal.username" /></p></li>

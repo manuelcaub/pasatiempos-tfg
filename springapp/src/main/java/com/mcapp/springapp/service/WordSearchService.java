@@ -16,9 +16,10 @@ import com.mcapp.springapp.common.dto.Position;
 import com.mcapp.springapp.common.dto.WordSearch;
 import com.mcapp.springapp.repository.FraseDao;
 import com.mcapp.springapp.repository.PalabraDao;
+import com.mcapp.springapp.service.interfaces.IWordSearchService;
 
 @Service
-public class WordSearchService {
+public class WordSearchService implements IWordSearchService {
 	
 	@Resource
 	private PalabraDao daoPalabra;
