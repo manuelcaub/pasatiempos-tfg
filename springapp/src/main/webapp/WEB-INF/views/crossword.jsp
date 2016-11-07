@@ -4,6 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/includeFiles.jsp" %>
     <script src="<c:url value="/resources/js/pastime-util.js" />"></script>
+    <script src="<c:url value="/resources/js/crossword-util.js" />"></script>
     <script src="<c:url value="/resources/js/crossword.js" />"></script>
     <title><spring:message code="crossword.title"></spring:message></title>
 </head>

@@ -31,9 +31,9 @@ public class CrosswordService implements ICrosswordService {
 	 * @param blacks Porcentaje de espacios en negro.
 	 * 
 	 */
-	public Crossword generateCrossword(int size, int blacks) {
-		Crossword crossword = new Crossword(size);
-		crossword.setBoard(this.initializeBoard(size, blacks));
+	public Crossword generateCrossword(int sizeSide, int blackPercentage) {
+		Crossword crossword = new Crossword(sizeSide);
+		crossword.setBoard(this.initializeBoard(sizeSide, blackPercentage));
 		crossword.setBoardWords(this.initializeGaps(crossword.getBoard()));
 		List<String> words = this.daoPalabra.getPalabrasDto().parallelStream().map(x -> x.getValor()).collect(Collectors.toList());
 		Collections.shuffle(words);
@@ -63,23 +63,21 @@ public class CrosswordService implements ICrosswordService {
 	
 	/**
 	 * Inicializa el tablero con el tamaño y el porcentaje de espacios en negro dados.
-	 * @param size Tamaño del lado del tablero.
-	 * @param black Porcentaje de espacios en negro del tablero.
 	 **/
-	private char[][] initializeBoard(int size, int black) {
-		final char[][] board = new char[size][size];
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
+	private char[][] initializeBoard(int sizeSide, int blackPercentage) {
+		final char[][] board = new char[sizeSide][sizeSide];
+		for (int i = 0; i < sizeSide; i++) {
+			for (int j = 0; j < sizeSide; j++) {
 				board[i][j] = WHITE;
 			}
 		}
 
-		final int blacks = size * size * black / 100;
+		final int blacks = sizeSide * sizeSide * blackPercentage / 100;
 		for (int i = 0; i < blacks; i++) {
 			int row, column;
 			do {
-				row = (int) (Math.random() * size);
-				column = (int) (Math.random() * size);
+				row = (int) (Math.random() * sizeSide);
+				column = (int) (Math.random() * sizeSide);
 			} while (board[row][column] == BLACK);
 
 			board[row][column] = BLACK;
@@ -88,11 +86,6 @@ public class CrosswordService implements ICrosswordService {
 		return board;
 	}
 	
-	/**
-	 * Inicializa los huecos del tablero.
-	 * @param board Tablero del crucigrama
-	 * @return Devuelve la lista de huecos del tablero.
-	 **/
 	private ArrayList<Word> initializeGaps(char[][] board) {
 		final ArrayList<Word> words = new ArrayList<>();
 
@@ -106,6 +99,7 @@ public class CrosswordService implements ICrosswordService {
 						words.add(new Word(row, col - (length - 1), Direction.Horizontal, length));
 						length = 0;
 					}
+					
 				} else if (board[row][col] == BLACK && length > 0) {
 					words.add(new Word(row, col - length, Direction.Horizontal, length));
 					length = 0;
@@ -125,6 +119,7 @@ public class CrosswordService implements ICrosswordService {
 							words.add(new Word(row - (length - 1), col, Direction.Vertical, length));
 							length = 0;
 						}
+						
 					}
 				} else if (board[row][col] == BLACK && length > 0) {
 					words.add(new Word(row - length, col, Direction.Vertical, length));
@@ -138,19 +133,17 @@ public class CrosswordService implements ICrosswordService {
 	
 	/**
 	 * Método que realiza la búsqueda mediante backtracking de las palabras que rellenarán los huecos del crucigrama.
-	 * @param crossword Crucigrama a rellenar.
-	 * @param words Lista de palabras candidatas.
 	 **/
-	private boolean backtracking(Crossword crossword, List<String> words) {
+	private boolean backtracking(Crossword crossword, List<String> candidateWords) {
 		Word gap = this.getFirstGap(crossword.getBoardWords());
 		if (gap == null)
 			return true;
 
-		for (final String word : words.parallelStream().filter(x -> x.length() == gap.getLength() && crossword.getBoardWords().parallelStream().allMatch(y -> !x.equals(y.getWord()))).collect(Collectors.toList())) {
-			if (this.esSolucion(gap, word, words, crossword)) {
+		for (final String word : candidateWords.parallelStream().filter(x -> x.length() == gap.getLength() && crossword.getBoardWords().parallelStream().allMatch(y -> !x.equals(y.getWord()))).collect(Collectors.toList())) {
+			if (this.isSolution(gap, word, candidateWords, crossword)) {
 				gap.setWord(word);
 				this.updateBoard(crossword.getBoard(), gap.getPos(), word);
-				if (this.backtracking(crossword, words))
+				if (this.backtracking(crossword, candidateWords))
 					return true;
 
 				gap.setWord(null);
@@ -163,13 +156,9 @@ public class CrosswordService implements ICrosswordService {
 	
 	/**
 	 * Comprueba si puede añadirse la palabra al hueco estudiado.
-	 * @param gap Hueco que se está estudiando.
-	 * @param candidate Palabra candidata a ocupar el hueco.
-	 * @param words Lista de palabras.
-	 * @param crossword Crucigrama que se está generando.
 	 * @return Devuelve 'true' si puede añadirse la palabra candidata al hueco, en caso contrario devuelve false.
 	 **/
-	private boolean esSolucion(Word gap, String candidate, List<String> words, Crossword crossword) {
+	private boolean isSolution(Word gap, String candidate, List<String> words, Crossword crossword) {
 
 		for (int j = gap.getPos().getColumn(), k = 0; j < gap.getPos().getColumn() + gap.getLength(); j++, k++) {
 			final int auxj = j;
@@ -225,10 +214,8 @@ public class CrosswordService implements ICrosswordService {
 	
 	/**
 	 * Devuelve el primer hueco libre horizontal en el tablero.
-	 * @param words Lista de huecos de palabras del tablero
-	 * @return Devuelve el primer hueco libre, es decir, el primer hueco horizontal que no tenga palabra asignada.
 	 */
-	private Word getFirstGap(List<Word> words) {
-		return words.parallelStream().filter(x -> x.isHorizontal() && x.getWord() == null).findFirst().orElse(null);
+	private Word getFirstGap(List<Word> wordGaps) {
+		return wordGaps.parallelStream().filter(x -> x.isHorizontal() && x.getWord() == null).findFirst().orElse(null);
 	}
 }

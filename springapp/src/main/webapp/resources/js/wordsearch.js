@@ -15,6 +15,9 @@ function createWordSearch(jsonObject) {
 	
     var tablero=new Tablero(obj.board);
     tablero.draw();
+	if(typeof obj.quote != "undefined") {
+		$("#mySVG").after('<br><p>"' + obj.quote.valor + '", ' + obj.quote.autor + '</p>');
+	}
 }
 
 function Tablero(texto) {
