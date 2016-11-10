@@ -1,5 +1,7 @@
 package com.mcapp.springapp.web;
 
+import java.security.Principal;
+
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
@@ -12,10 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mcapp.springapp.common.dto.UsuarioDto;
-import com.mcapp.springapp.common.dto.Word;
-import com.mcapp.springapp.service.CrosswordService;
-import com.mcapp.springapp.service.PalabraService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mcapp.springapp.common.dto.Crossword;
+import com.mcapp.springapp.common.dto.WordDto;
+import com.mcapp.springapp.domain.User;
+import com.mcapp.springapp.service.interfaces.CrosswordService;
+import com.mcapp.springapp.service.interfaces.WordService;
+import com.mcapp.springapp.service.interfaces.PuzzleService;
 
 @Controller
 public class CrosswordController {
@@ -24,24 +30,33 @@ public class CrosswordController {
 	private CrosswordService srvCrossword;
 	
 	@Resource
-	private PalabraService srvPalabra;
+	private WordService srvWord;
+	
+	@Resource
+	private PuzzleService srvPasatiempo;
 	
 	@RequestMapping(value = "/crossword", method = RequestMethod.GET)
 	public ModelAndView getCrosswordView (Model model) { 
-        model.addAttribute("usuarioLogin", new UsuarioDto());
+        model.addAttribute("usuarioLogin", new User());
 	    return new ModelAndView("crossword");
 	}
 	
-	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET, params = {"size", "blacks"})
-	@ResponseBody
-	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("blacks") int blacks) { 
-        return new JSONObject(this.srvCrossword.generateCrossword(size, blacks)).toString();
+	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET, params = {"size", "blacks", "sessionId"})
+	public @ResponseBody String getNewCrossword (@RequestParam("size") int size, @RequestParam("blacks") int blacks, @RequestParam("sessionId") String sessionId) throws JsonProcessingException { 
+		return new ObjectMapper().writeValueAsString(this.srvCrossword.generateCrossword(size, blacks, sessionId));
 	}
 	
 	@RequestMapping(value = "/savedefinition", method = RequestMethod.POST)
 	@ResponseBody
-	public String setDefinition (@RequestBody Word word) { 
-        this.srvPalabra.setDefinition(word.getWord(), word.getDefinition());
+	public String setDefinition (@RequestBody WordDto word) { 
+        this.srvWord.setDefinition(word.getWord(), word.getDefinition());
+        return "success";
+	}
+	
+	@RequestMapping(value = "/savecrossword", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveCrossword (@RequestBody Crossword crossword, Principal principal) {
+		this.srvPasatiempo.saveCrossword(crossword, principal.getName());
         return "success";
 	}
 }

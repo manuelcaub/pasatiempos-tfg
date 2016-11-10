@@ -6,11 +6,16 @@
     <script src="<c:url value="/resources/js/pastime-util.js" />"></script>
     <script src="<c:url value="/resources/js/crossword-util.js" />"></script>
     <script src="<c:url value="/resources/js/crossword.js" />"></script>
+    <script src="<c:url value="/resources/js/ws.js" />"></script>
     <title><spring:message code="crossword.title"></spring:message></title>
 </head>
 
 <body>
 	<%@ include file="/WEB-INF/views/header.jsp" %>
+	<label id="listening"></label>
+	<script>
+	if (chat == null) conectarWebSocket();
+	</script>
 	<div class="container">
   		<div class="panel-group" id="accordion">
     		<div class="panel panel-default">
@@ -35,7 +40,7 @@
       				<div id="panel-info" class="panel-body"></div>
     			</div>
     		</div>
-      		<div class="panel-footer"><button type="button" class="btn btn-default"><i class="fa fa-cloud-upload"></i></button> <button type="button" onclick="javascript:newCrossword()" class="btn btn-default"><i class="fa fa-refresh"></i></button> <button type="button" class="btn btn-default"><i class="fa fa-times"></i></button></div>
+      		<div class="panel-footer"><button type="button" onclick="javascript:saveCrossword()" class="btn btn-default"><i class="fa fa-cloud-upload"></i></button> <button type="button" onclick="javascript:newCrossword()" class="btn btn-default"><i class="fa fa-refresh"></i></button> <button type="button" class="btn btn-default"><i class="fa fa-times"></i></button></div>
     	</div>
   	</div>
   </div>

@@ -3,6 +3,7 @@ package com.mcapp.springapp.web;
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mcapp.springapp.common.dto.UsuarioDto;
-import com.mcapp.springapp.service.WordSearchService;
+import com.mcapp.springapp.domain.User;
+import com.mcapp.springapp.service.interfaces.WordSearchService;
 
 @Controller
 public class WordSearchController {
@@ -20,9 +21,10 @@ public class WordSearchController {
 	@Resource
 	private WordSearchService srvWordSearch;
 	
+	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(value = "/wordsearch", method = RequestMethod.GET)
 	public ModelAndView getWordSearchView (Model model) { 
-        model.addAttribute("usuarioLogin", new UsuarioDto());
+        model.addAttribute("usuarioLogin", new User());
 	    return new ModelAndView("wordsearch");
 	}
 	

@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.mcapp.springapp.common.dto.WordSearch;
+import com.mcapp.springapp.service.interfaces.WordSearchService;
 
 public class WordSearchServiceTests {
 	

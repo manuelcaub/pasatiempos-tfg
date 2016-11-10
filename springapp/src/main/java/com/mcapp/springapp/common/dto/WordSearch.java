@@ -16,7 +16,7 @@ public class WordSearch {
 	
 	private List<String> words;
 	
-	private FraseDto quote;
+	private QuoteDto quote;
 	
 	private final char EMPTY = '-';
 	
@@ -75,11 +75,11 @@ public class WordSearch {
 		return size;
 	}
 
-	public FraseDto getQuote() {
+	public QuoteDto getQuoteDto() {
 		return quote;
 	}
 
-	public void setQuote(FraseDto quote) {
+	public void setQuoteDto(QuoteDto quote) {
 		this.quote = quote;
 	}
 	
@@ -98,8 +98,8 @@ public class WordSearch {
 			str.append(word + '\n');
 		}
 		
-		if(this.getQuote() != null) {
-			str.append('\n' + this.getQuote().getValor());
+		if(this.getQuoteDto() != null) {
+			str.append('\n' + this.getQuoteDto().getQuote());
 		}
 		
 		return str.toString();

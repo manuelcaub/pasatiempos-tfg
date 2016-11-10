@@ -3,10 +3,14 @@ package com.mcapp.springapp.common.dto;
 import java.util.List;
 
 public class Crossword {
-	private final int size;
+	private final String type = "crossword";
+	private int size;
 	private char[][] board;
-	private List<Word> boardWords;
+	private List<WordDto> boardWords;
 
+	public Crossword() {
+	}
+	
 	public Crossword(int size) {
 		this.size = size;
 	}
@@ -15,11 +19,11 @@ public class Crossword {
 		return size;
 	}
 
-	public List<Word> getBoardWords() {
+	public List<WordDto> getBoardWords() {
 		return boardWords;
 	}
 
-	public void setBoardWords(List<Word> boardWords) {
+	public void setBoardWords(List<WordDto> boardWords) {
 		this.boardWords = boardWords;
 	}
 
@@ -29,6 +33,10 @@ public class Crossword {
 
 	public void setBoard(char[][] board) {
 		this.board = board;
+	}
+	
+	public String getType() {
+		return this.type;
 	}
 	
 	public String toString(){

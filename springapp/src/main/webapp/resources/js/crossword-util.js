@@ -1,15 +1,38 @@
+var mycrossword;
+
 function newCrossword() {
 	if($("input#input-size").is(":valid") && $("input#input-blacks").is(":valid")) {
 	    $.get({
 	        url : 'newcrossword.html',
 	        dataType : 'json',
-	        data: { size: document.getElementById("input-size").value, blacks: document.getElementById("input-blacks").value },
+	        data: { size: document.getElementById("input-size").value, blacks: document.getElementById("input-blacks").value, sessionId: chat.sessionId },
 	        success : function(data) {
+	        	mycrossword = data;
+	        	var a = JSON.stringify(data);
 	        	createCrossword(data);
 	        	insertWords(data.boardWords);
 	        }
 	    });
 	}
+}
+
+function saveCrossword() {
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({type : "POST",
+		dataType : 'text',
+    	url: 'savecrossword.html',
+    	beforeSend: function (xhr) {
+    	    xhr.setRequestHeader(header, token);
+    	},
+    	data : JSON.stringify(mycrossword),
+    	contentType : "application/json",
+        success: function(data) {
+
+        },
+        error: function(e) {
+			console.log("ERROR: ", e);
+		}});
 }
 
 function saveDefinition(obj) {
@@ -39,10 +62,10 @@ function insertWords(words) {
 	$("#panel-info").empty();
 	var formwords = $("<form></form>");
 	var vwords = words.filter(function(obj){
-		return obj.vertical;
+		return obj.direction == "vertical";
 	});
 	var hwords = words.filter(function(obj){
-		return obj.horizontal;
+		return obj.direction == "horizontal";
 	});
 	
 	formwords.append('<h4>Horizontales</h4>');
@@ -51,7 +74,7 @@ function insertWords(words) {
 		var inputgroup = $('<div class="input-group"></div>');
 		inputgroup.append('<span class="input-group-addon" id="basic-addon1">' + hwords[i].word + '</span>');
 		var inputword = $('<input id="hword-input' + i + '" class="form-control input-sm" type="text" ></input>');
-		if(typeof hwords[i].definition != 'undefined') {
+		if(hwords[i].definition != '') {
 			inputword.attr("value", hwords[i].definition);
 			inputword.prop("disabled", true);
 			inputgroup.append(inputword);
@@ -70,7 +93,7 @@ function insertWords(words) {
 		var inputgroup = $('<div class="input-group"></div>');
 		inputgroup.append('<span class="input-group-addon">' + vwords[i].word + '</span>');
 		var inputword = $('<input id="vword-input' + i + '" class="form-control input-sm" type="text" word-value="' + vwords[i].word + '"></input>');
-		if(typeof vwords[i].definition != 'undefined') {
+		if(vwords[i].definition != '') {
 			inputword.attr("value", vwords[i].definition);
 			inputword.prop("disabled", true);
 			inputgroup.append(inputword);

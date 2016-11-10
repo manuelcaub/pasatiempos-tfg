@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.mcapp.springapp.service.interfaces.CrosswordService;
+
 public class CrosswordServiceTests {
 
     private ApplicationContext context;
@@ -22,7 +24,6 @@ public class CrosswordServiceTests {
 	
 	@Test
 	public void test() {
-		System.out.println(this.srvCrossword.generateCrossword(6, 30).toString());
 	}
 
 }

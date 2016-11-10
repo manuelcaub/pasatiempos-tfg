@@ -3,7 +3,7 @@ package com.mcapp.springapp.common.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mcapp.springapp.domain.Palabra;
+import com.mcapp.springapp.domain.Word;
 
 public class PalabraDto {
 
@@ -17,13 +17,6 @@ public class PalabraDto {
     
     private List<String> definiciones;
     
-    public PalabraDto(Palabra palabra){
-    	this.id = palabra.getId();
-    	this.valor = palabra.getSinAcentosMayus();
-    	this.longitud = palabra.getLongitud();
-    	this.definiciones = palabra.getDefiniciones().stream().map(x -> x.getValor()).collect(Collectors.toList());
-    	this.idioma = palabra.getIdioma().getNombre();
-    }
 
 	public int getId() {
 		return id;

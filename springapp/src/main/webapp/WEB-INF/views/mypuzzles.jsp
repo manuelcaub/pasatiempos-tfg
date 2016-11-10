@@ -5,7 +5,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 	<title><spring:message code="title"></spring:message></title>
     <%@ include file="/WEB-INF/views/includeFiles.jsp" %>	
-	<script src="<c:url value="/resources/js/wordsearch.js"/>"></script>
+	<script src="<c:url value="/resources/js/mypuzzles.js"/>"></script>
+	
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/header.jsp" %>
@@ -14,7 +15,7 @@
 	    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Tipo de pasatiempo
 	    <span class="caret"></span></button>
 	    <ul class="dropdown-menu">
-	      <li><a href="#">Crucigrama</a></li>
+	      <li><a href="javascript:dropdownCrossword()">Crucigrama</a></li>
 	      <li><a href="#">Sopa de letras</a></li>
 	    </ul>
 	  </div>

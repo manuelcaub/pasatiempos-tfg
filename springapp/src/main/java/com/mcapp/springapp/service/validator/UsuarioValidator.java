@@ -7,27 +7,27 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.mcapp.springapp.common.dto.UsuarioDto;
-import com.mcapp.springapp.domain.Usuario;
-import com.mcapp.springapp.service.interfaces.IUsuarioService;
+import com.mcapp.springapp.common.dto.UserDto;
+import com.mcapp.springapp.domain.User;
+import com.mcapp.springapp.service.interfaces.UserService;
 
 @Component
 public class UsuarioValidator implements Validator {
 	
     @Resource
-    private IUsuarioService srvUsuario;
+    private UserService srvUsuario;
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return Usuario.class.equals(aClass);
+        return User.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        UsuarioDto user = (UsuarioDto) o;
+        UserDto user = (UserDto) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");        
-        if (srvUsuario.getUsuarioByEmail(user.getEmail()) != null) {
+        if (srvUsuario.getUserByEmail(user.getEmail()) != null) {
             errors.rejectValue("mail", "Duplicate.userForm.email");
         }
 
