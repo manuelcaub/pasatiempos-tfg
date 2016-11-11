@@ -1,8 +1,12 @@
 package com.mcapp.springapp.common.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Crossword {
+public class Crossword implements Serializable {
+	
+	private static final long serialVersionUID = -5153565619815790831L;
+	
 	private final String type = "crossword";
 	private int size;
 	private char[][] board;

@@ -20,6 +20,8 @@ public class WordSearch {
 	
 	private final char EMPTY = '-';
 	
+	private final String type = "wordsearch";
+	
 	public WordSearch(int size, List<Direction> directions) {
 		this.size = size;
 		this.words = new ArrayList<String>();
@@ -81,6 +83,10 @@ public class WordSearch {
 
 	public void setQuoteDto(QuoteDto quote) {
 		this.quote = quote;
+	}
+	
+	public String getType() {
+		return this.type;
 	}
 	
 	public String toString(){

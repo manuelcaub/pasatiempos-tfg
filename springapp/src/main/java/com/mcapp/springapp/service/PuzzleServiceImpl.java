@@ -38,28 +38,13 @@ public class PuzzleServiceImpl implements PuzzleService {
 	}
 
 	@Override
-	public List<Crossword> getCrosswordByUser(String user) {
-		return this.repPuzzle.getCrosswordsByUser(user).stream().map(x -> this.jsonToCrossword(x)).collect(Collectors.toList());
+	public List<String> getCrosswordByUser(String user) {
+		return this.repPuzzle.getCrosswordsByUser(user);
 	}
 	
-	private Crossword jsonToCrossword(String json) {
-		Crossword crossword = null;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        try {
-        	crossword = mapper.readValue(json, Crossword.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        return crossword;
+	@Override
+	public String getPuzzlesByUser(String email) {
+		return this.repPuzzle.getPuzzlesByUser(email);
 	}
 	
 	private String crosswordToJson(Crossword crossword) {

@@ -106,5 +106,6 @@ function insertWords(words) {
 		formwords.append(formgroup);
 	}
 	
-	$("#panel-info").append(formwords);
+	$("#panel-info").append(formwords);    		
+	
 }

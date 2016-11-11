@@ -20,8 +20,10 @@ public class WordRepository extends AbstractRepository<Word> {
 	@Transactional(readOnly = true)
 	public Map<Integer, List<String>> getWordsOrderByLength(int maxLength) {
 		Map<Integer, List<String>> mapWords = new HashMap<Integer, List<String>>();
+		List<String> allWords = this.getWords(maxLength);
 		for(int i = 1; i <= maxLength; i++) {
-			mapWords.put(i, this.getWords(i));
+			final int auxLength = i;
+			mapWords.put(i, allWords.stream().filter(x -> x.length() == auxLength).collect(Collectors.toList()));
 		}
 		
 		return mapWords;
@@ -32,7 +34,7 @@ public class WordRepository extends AbstractRepository<Word> {
 	public List<String> getWords(int length){
 		String sql = "SELECT w.withoutMarksUpper"+
 		          " FROM   word w"+
-		          " WHERE  w.length = :length order by rand() LIMIT 100;";
+		          " WHERE w.length <= :length order by rand();";
 		
 		return (List<String>)this.hibernate().createNativeQuery(sql).setParameter("length", length).getResultList();
 	}

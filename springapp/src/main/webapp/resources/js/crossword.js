@@ -4,7 +4,8 @@
         var fontSize = ancho/2;
         var namespace="http://www.w3.org/2000/svg";
 
-        function Tablero(texto, palabras) {
+        function Tablero(id, texto, palabras) {
+        	this.id = id;
             this.filas=texto.length;
             this.columnas=texto[0].length;
             this.texto=texto;
@@ -12,7 +13,7 @@
         }
 
         Tablero.prototype.draw = function() {
-            var lienzo=document.getElementById("mySVG");
+            var lienzo=document.getElementById("mySVG" + this.id);
             lienzo.setAttribute("width", this.filas * ancho);
             lienzo.setAttribute("height", this.columnas * alto);
 
@@ -80,6 +81,6 @@
         		obj = jsonObject;
         	}
         	
-            var tablero=new Tablero(obj.board, obj.boardWords);
+            var tablero=new Tablero("", obj.board, obj.boardWords);
             tablero.draw();
         }

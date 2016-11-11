@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcapp.springapp.domain.User;
 import com.mcapp.springapp.service.interfaces.CrosswordService;
 import com.mcapp.springapp.service.interfaces.PuzzleService;
@@ -34,12 +36,10 @@ public class MyPuzzlesController {
 		return new ModelAndView("mypuzzles");
 	}
 	
-//	@RequestMapping(value = "/getcrosswords", method = RequestMethod.GET)
-//	@ResponseBody
-//	public CrosswordList getCrosswords (Principal principal) { 
-//		CrosswordList list = new CrosswordList();
-//		list.addAll(this.srvPuzzle.getCrosswordByUser(principal.getName()));
-//        return list;
-//	}
+	@RequestMapping(value = "/getpuzzles", method = RequestMethod.GET)
+	@ResponseBody
+	public String getCrosswords (Principal principal) { 
+		return this.srvPuzzle.getPuzzlesByUser(principal.getName());
+	}
 
 }

@@ -9,9 +9,11 @@ public interface PuzzleService {
 	
 	public void saveCrossword(Crossword crossword, String user);
 	
-	public List<Crossword> getCrosswordByUser(String user);
+	public List<String> getCrosswordByUser(String user);
 	
 	public void saveWordSearch(WordSearch wordsearch, String user);
 	
 	public List<WordSearch> getWordSearchByUser(String user);
+	
+	public String getPuzzlesByUser(String user);
 }

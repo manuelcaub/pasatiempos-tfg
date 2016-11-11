@@ -139,28 +139,28 @@ public class CrosswordServiceImpl implements CrosswordService {
 		WordDto gap = this.getFirstGap(crossword.getBoardWords());
 		if (gap == null)
 			return true;
-		JSONObject jso = new JSONObject();
-		jso.put("type",  "CUADRO");
 		
 		for (final String word : allWords.get(gap.getLength())) {
 			if (this.isSolution(gap, word, allWords, crossword)) {
-				gap.setWord(word);
-				this.updateBoard(crossword.getBoard(), gap.getPos(), word);
-				jso.put("texto", new JSONObject(crossword));
-				WSServer.send(sessionId, jso);
-
+				this.updateBoard(crossword.getBoard(), gap, word);
+				this.sendCrossword(crossword, sessionId);
+				
 				if (this.backtracking(crossword, allWords, sessionId)) {
-					jso.put("texto", new JSONObject(crossword));
-					WSServer.send(sessionId, jso);
 					return true;
 				}
 				
-				gap.setWord(null);
-				this.deleteWordDto(crossword.getBoard(), gap.getPos(), word);
+				this.downdateBoard(crossword.getBoard(), gap, word);
 			}
 		}
 
 		return false;
+	}
+	
+	private void sendCrossword(Crossword crossword, String sessionId) {
+		JSONObject jso = new JSONObject();
+		jso.put("type",  "CUADRO");
+		jso.put("texto", new JSONObject(crossword));
+		WSServer.send(sessionId, jso);
 	}
 	
 	/**
@@ -169,6 +169,10 @@ public class CrosswordServiceImpl implements CrosswordService {
 	 **/
 	private boolean isSolution(WordDto gap, String candidate, Map<Integer, List<String>> words, Crossword crossword) {
 
+		if(crossword.getBoardWords().stream().anyMatch((x -> x.getWord() != null && x.getWord().equals(candidate)))) {
+			return false;
+		}
+		
 		for (int j = gap.getPos().getColumn(), k = 0; j < gap.getPos().getColumn() + gap.getLength(); j++, k++) {
 			final int auxj = j;
 			final int auxk = k;
@@ -201,17 +205,19 @@ public class CrosswordServiceImpl implements CrosswordService {
 		return true;
 	}
 	
-	private void updateBoard(char[][] board, Position pos, String candidate) {
-		Position auxPos = new Position(pos.getRow(), pos.getColumn());
+	private void updateBoard(char[][] board, WordDto word, String candidate) {
+		word.setWord(candidate);
+		Position auxPos = new Position(word.getRow(), word.getCol());
 		for(int i = 0; i < candidate.length(); i++) {
 			board[auxPos.getRow()][auxPos.getColumn()] = candidate.charAt(i);
 			auxPos = move(auxPos);
 		}
 	}
 	
-	private void deleteWordDto(char[][] board, Position pos, String word) {
-		Position auxPos = new Position(pos.getRow(), pos.getColumn());
-		for (int i = 0; i < word.length(); i++) {
+	private void downdateBoard(char[][] board, WordDto word, String candidate) {
+		word.setWord(null);
+		Position auxPos = new Position(word.getRow(), word.getCol());
+		for (int i = 0; i < candidate.length(); i++) {
 			board[auxPos.getRow()][auxPos.getColumn()] = WHITE;
 			auxPos = move(auxPos);
 		}

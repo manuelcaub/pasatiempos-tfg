@@ -4,7 +4,6 @@ import java.security.Principal;
 
 import javax.annotation.Resource;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +40,8 @@ public class CrosswordController {
 	    return new ModelAndView("crossword");
 	}
 	
-	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET, params = {"size", "blacks", "sessionId"})
-	public @ResponseBody String getNewCrossword (@RequestParam("size") int size, @RequestParam("blacks") int blacks, @RequestParam("sessionId") String sessionId) throws JsonProcessingException { 
+	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET)
+	public @ResponseBody String getNewCrossword (@RequestParam int size, @RequestParam int blacks, @RequestParam String sessionId) throws JsonProcessingException { 
 		return new ObjectMapper().writeValueAsString(this.srvCrossword.generateCrossword(size, blacks, sessionId));
 	}
 	
