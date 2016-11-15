@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -15,7 +14,6 @@ import org.json.JSONObject;
 public class WSServer {
 	private static Hashtable<String, Session> sesiones=new Hashtable<>();
 		
-	@SuppressWarnings("unchecked")
 	@OnOpen
 	public void open(Session session) {
 		sesiones.put(session.getId(), session);

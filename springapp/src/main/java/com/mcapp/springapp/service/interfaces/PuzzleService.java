@@ -7,4 +7,6 @@ public interface PuzzleService {
 	public void savePuzzle(Object specificPuzzle, String user) throws JsonProcessingException;
 	
 	public String getPuzzlesByUser(String user);
+
+	public void removePuzzle(String puzzle, String name);
 }

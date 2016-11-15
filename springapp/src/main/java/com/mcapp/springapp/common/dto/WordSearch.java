@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class WordSearch implements Serializable {
 
 	private static final long serialVersionUID = 6803519417211487867L;
@@ -37,7 +35,7 @@ public class WordSearch implements Serializable {
 		this.initializeBoard();
 		
 		if(directions == null) {
-			this.directions = Arrays.asList(Direction.values());
+			this.directions = Arrays.asList(Direction.NW, Direction.NE, Direction.SW, Direction.SE, Direction.N, Direction.W, Direction.S, Direction.E);
 		} else {
 			this.directions = directions;
 		}

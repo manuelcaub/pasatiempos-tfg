@@ -35,7 +35,7 @@ public class WordSearchController {
 	
 	@RequestMapping(value = "/newwordsearch", method = RequestMethod.GET, params = {"size", "words"})
 	@ResponseBody
-	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("words") int words) throws JsonProcessingException { 
-        return new ObjectMapper().writeValueAsString(this.srvWordSearch.generateWordSearchPuzzle(size, words));
+	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("words") int words, @RequestParam("sessionId") String sessionId) throws JsonProcessingException { 
+        return new ObjectMapper().writeValueAsString(this.srvWordSearch.generateWordSearchPuzzle(size, words, sessionId));
 	}
 }

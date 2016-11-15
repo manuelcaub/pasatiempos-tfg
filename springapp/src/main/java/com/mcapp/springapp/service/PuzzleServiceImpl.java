@@ -41,4 +41,10 @@ public class PuzzleServiceImpl implements PuzzleService {
         mapper.setSerializationInclusion(Include.NON_NULL);
         return mapper.writeValueAsString(specificPuzzle);
 	}
+
+	@Override
+	public void removePuzzle(String jsonPuzzle, String user) {
+		this.repPuzzle.removeByPuzzle(jsonPuzzle, user);
+		
+	}
 }

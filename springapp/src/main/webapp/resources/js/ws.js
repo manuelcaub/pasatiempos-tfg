@@ -9,28 +9,26 @@ function conectarWebSocket() {
 	chat=new WebSocket(url);
 
 	chat.onopen = function() {
-		document.getElementById("listening").innerHTML="Listening";
-		document.getElementById("listening").setAttribute("style", "color:green");
+		document.getElementById("circle-ws").setAttribute("style", "color:green");
 	}
 	
 	chat.onerror = function() {
-		document.getElementById("listening").innerHTML="No listening";
 		showError("Error");
 	}
 	
 	chat.onclose = function() {
-		document.getElementById("listening").innerHTML="No listening";
-		document.getElementById("listening").setAttribute("style", "color:red");
+		document.getElementById("circle-ws").setAttribute("style", "color:red");
 	}
 	
-	chat.onmessage = function(mensaje) {
-		mensaje=JSON.parse(mensaje.data);
-		var type=mensaje.type;
+	chat.onmessage = function(message) {
+		message=JSON.parse(message.data);
+		var type=message.type;
 		if (type=="SESSION_ID") {
-			this.sessionId=mensaje.sessionId;		
-			document.getElementById("listening").innerHTML="Listening (sessionId: " + this.sessionId + ")";
-		} else if (type=="CUADRO") {
-			createCrossword(mensaje.texto);
+			this.sessionId=message.sessionId;		
+		} else if (type=="CROSSWORD") {
+			createCrossword(message.puzzle);
+		} else if (type=="WORDSEARCH") {
+			createWordSearch(message.puzzle);
 		}
 	}		
 }

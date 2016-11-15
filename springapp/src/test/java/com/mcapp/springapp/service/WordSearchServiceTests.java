@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.mcapp.springapp.common.dto.WordSearch;
 import com.mcapp.springapp.service.interfaces.WordSearchService;
 
 public class WordSearchServiceTests {
@@ -25,8 +24,6 @@ public class WordSearchServiceTests {
 	
 	@Test
 	public void test() {
-		WordSearch puzzle = this.srvWordSearch.generateWordSearchPuzzle(15, 20);
-		System.out.println(puzzle.toString());
 	}
 
 }

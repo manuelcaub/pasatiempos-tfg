@@ -26,7 +26,7 @@ public class Puzzle implements Serializable {
 	@Column(name = "puzzle", nullable = false)
 	private String puzzle;
 	
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user", nullable = false)
 	private User user;
 	

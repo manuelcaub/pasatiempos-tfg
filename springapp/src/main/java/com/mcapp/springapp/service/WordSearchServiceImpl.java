@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import com.mcapp.springapp.domain.Quote;
 import com.mcapp.springapp.repository.QuoteRepository;
 import com.mcapp.springapp.repository.WordRepository;
 import com.mcapp.springapp.service.interfaces.WordSearchService;
+import com.mcapp.springapp.websocket.WSServer;
 
 @Service
 public class WordSearchServiceImpl implements WordSearchService {
@@ -41,10 +43,10 @@ public class WordSearchServiceImpl implements WordSearchService {
 		this.random = new Random();
 	}
 	
-	public WordSearch generateWordSearchPuzzle(int size, int numWords) {
+	public WordSearch generateWordSearchPuzzle(int size, int numWords, String sessionId) {
 		List<String> words = this.repWord.getWordsBetween(3, size);
 		WordSearch puzzle = new WordSearch(size);
-		this.backtracking(puzzle, words, words, numWords, 0);
+		this.backtracking(puzzle, words, words, numWords, 0, sessionId);
 		
 		Quote quote = this.repQuote.getQuoteByLength(this.countEmpty(puzzle.getBoard()));
 		logger.debug("HOLA MUNDO");
@@ -58,7 +60,7 @@ public class WordSearchServiceImpl implements WordSearchService {
 		return puzzle;
 	}
 	
-	private boolean backtracking(WordSearch puzzle, List<String> candidates, List<String> words, int numWords, int step) {
+	private boolean backtracking(WordSearch puzzle, List<String> candidates, List<String> words, int numWords, int step, String sessionId) {
 		
 		// Caso base, si se han establecido todas las palabras indicadas.
 		if (step == numWords)
@@ -66,16 +68,15 @@ public class WordSearchServiceImpl implements WordSearchService {
 
 		// Se reordena la lista de posiciones para que las palabras se establezcan más desordenadas en el tablero
 		Collections.shuffle(puzzle.getPositions());
-		// Se reordena la lista de direcciones para que se estudien aleatoriamente.
-		Collections.shuffle(puzzle.getDirections());
 		for (String candidate : candidates) {
-			for (Position pos : puzzle.getPositions()) {
-				for (Direction dir : puzzle.getDirections()) {
+			for (Direction dir : puzzle.getDirections()) {
+				for (Position pos : puzzle.getPositions()) {
 					if(this.isSolution(puzzle, pos.getRow(), pos.getColumn(), dir, candidate)) {
 						WordDto word = new WordDto(candidate, pos, dir, candidate.length());
 						puzzle.getWords().add(word);
 						String previous = this.updateBoard(puzzle, pos.getRow(), pos.getColumn(), dir, candidate);
-						if(this.backtracking(puzzle, words.parallelStream().filter(x -> puzzle.getWords().stream().allMatch(y -> !x.contains(y.getWord()) && !y.getWord().contains(x))).unordered().collect(Collectors.toList()), words, numWords, step + 1)) {
+						this.sendWordSearch(puzzle, sessionId);
+						if(this.backtracking(puzzle, words.parallelStream().filter(x -> puzzle.getWords().stream().allMatch(y -> !x.contains(y.getWord()) && !y.getWord().contains(x))).unordered().collect(Collectors.toList()), words, numWords, step + 1, sessionId)) {
 							return true;
 						}
 						
@@ -111,9 +112,6 @@ public class WordSearchServiceImpl implements WordSearchService {
 
 	private boolean isSolution(WordSearch puzzle, int row, int col, Direction dir, String candidate) {
 		Position pos = new Position(row, col);
-//		if(this.isContainedInAWord(puzzle.getWords(), row, col, dir, candidate)) {
-//			return false;
-//		}
 		
 		for(int i = 0; i < candidate.length(); i++)
 		{
@@ -127,10 +125,6 @@ public class WordSearchServiceImpl implements WordSearchService {
 		}
 		
 		return true;
-	}
-	
-	private boolean isContainedInAWord(List<WordDto> words, int row, int col, Direction dir, String candidate) {
-		return words.stream().anyMatch(x -> x.getWord().contains(candidate));
 	}
 	
 	private Position move(Position pos, Direction dir) {
@@ -191,5 +185,12 @@ public class WordSearchServiceImpl implements WordSearchService {
 				}
 			}
 		}
+	}
+	
+	private void sendWordSearch(WordSearch wordsearch, String sessionId) {
+		JSONObject jso = new JSONObject();
+		jso.put("type",  "WORDSEARCH");
+		jso.put("puzzle", new JSONObject(wordsearch));
+		WSServer.send(sessionId, jso);
 	}
 }

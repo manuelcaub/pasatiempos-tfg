@@ -5,7 +5,7 @@ function newWordSearch() {
 	    $.get({
 	        url : 'newwordsearch.html',
 	        dataType : 'json',
-	        data: { size: document.getElementById("input-size").value, words: document.getElementById("input-words").value },
+	        data: { size: document.getElementById("input-size").value, words: document.getElementById("input-words").value, sessionId: chat.sessionId },
 	        success : function(data) {
 	        	mywordsearch = data;
 	        	createWordSearch(data);

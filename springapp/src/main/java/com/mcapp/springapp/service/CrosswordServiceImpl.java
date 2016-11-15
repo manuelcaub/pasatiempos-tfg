@@ -39,7 +39,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 		crossword.setBoardWords(this.initializeGaps(crossword.getBoard()));
 		Map<Integer, List<String>> allWords = this.repWord.getWordsOrderByLength(crossword.getBoardWords().stream().mapToInt(x -> x.getLength()).max().getAsInt());
 
-		if(this.backtracking(crossword, allWords, sessionId)){
+		if(this.backtracking(crossword, allWords, sessionId, 0)){
 			// Después de generar el crucigrama, se establecen las palabras verticales ya que no han sido
 			// establecidas en el algoritmo (simplemente comprobadas).
 			for(WordDto w : crossword.getBoardWords().stream().filter(x -> x.getDirection() == Direction.S).collect(Collectors.toList())) {
@@ -135,31 +135,37 @@ public class CrosswordServiceImpl implements CrosswordService {
 	/**
 	 * Método que realiza la búsqueda mediante backtracking de las palabras que rellenarán los huecos del crucigrama.
 	 **/
-	private boolean backtracking(Crossword crossword, Map<Integer, List<String>> allWords, String sessionId) {
+	private boolean backtracking(Crossword crossword, Map<Integer, List<String>> allWords, String sessionId, int step) {
 		WordDto gap = this.getFirstGap(crossword.getBoardWords());
 		if (gap == null)
 			return true;
 		
+		long time_start, time_end;
+		time_start = System.currentTimeMillis();
 		for (final String word : allWords.get(gap.getLength())) {
 			if (this.isSolution(gap, word, allWords, crossword)) {
 				this.updateBoard(crossword.getBoard(), gap, word);
 				this.sendCrossword(crossword, sessionId);
 				
-				if (this.backtracking(crossword, allWords, sessionId)) {
+				if (this.backtracking(crossword, allWords, sessionId, step + 1)) {
 					return true;
 				}
 				
 				this.downdateBoard(crossword.getBoard(), gap, word);
 			}
 		}
+		
+		time_end = System.currentTimeMillis();
+		System.out.println("step " + step + " : " + (time_end - time_start));
+		
 
 		return false;
 	}
 	
 	private void sendCrossword(Crossword crossword, String sessionId) {
 		JSONObject jso = new JSONObject();
-		jso.put("type",  "CUADRO");
-		jso.put("texto", new JSONObject(crossword));
+		jso.put("type",  "CROSSWORD");
+		jso.put("puzzle", new JSONObject(crossword));
 		WSServer.send(sessionId, jso);
 	}
 	
@@ -168,7 +174,6 @@ public class CrosswordServiceImpl implements CrosswordService {
 	 * @return Devuelve 'true' si puede añadirse la palabra candidata al hueco, en caso contrario devuelve false.
 	 **/
 	private boolean isSolution(WordDto gap, String candidate, Map<Integer, List<String>> words, Crossword crossword) {
-
 		if(crossword.getBoardWords().stream().anyMatch((x -> x.getWord() != null && x.getWord().equals(candidate)))) {
 			return false;
 		}
@@ -197,8 +202,9 @@ public class CrosswordServiceImpl implements CrosswordService {
 
 				
 				final String parcial = palabraParcial.toString();
-				if (!words.get(interseccion.getLength()).parallelStream().anyMatch(x -> !x.equals(candidate) && x.matches(parcial)))
+				if (!words.get(interseccion.getLength()).parallelStream().anyMatch(x -> !x.equals(candidate) && x.matches(parcial))) {
 					return false;
+				}
 			}
 		}
 
