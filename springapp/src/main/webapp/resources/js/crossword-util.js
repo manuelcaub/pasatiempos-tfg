@@ -70,42 +70,32 @@ function insertWords(words) {
 	
 	formwords.append('<h4>Horizontales</h4>');
 	for(var i = 0; i < hwords.length; i++) {
-		var formgroup = $('<div class="form-group"></div>');
-		var inputgroup = $('<div class="input-group"></div>');
-		inputgroup.append('<span class="input-group-addon" id="basic-addon1">' + hwords[i].word + '</span>');
-		var inputword = $('<input id="hword-input' + i + '" class="form-control input-sm" type="text" ></input>');
-		if(hwords[i].definition != '') {
-			inputword.attr("value", hwords[i].definition);
-			inputword.prop("disabled", true);
-			inputgroup.append(inputword);
-		} else {
-			inputgroup.append(inputword);
-			inputgroup.append('<span class="input-group-btn"><button class="btn btn-secondary" type="button" id-definition="hword-input' + i + '" word-value="' + hwords[i].word + '" onclick="saveDefinition(this);"><i class="fa fa-plus" aria-hidden="true"></i></button></span>');
-		}
-
-		formgroup.append(inputgroup);
-		formwords.append(formgroup);
+		formwords.append(createInputGroup(i + "h", hwords[i].word, hwords[i].definition));
 	}
 	
 	formwords.append('<h4>Verticales</h4>');
 	for(var i = 0; i < vwords.length; i++) {
-		var formgroup = $('<div class="form-group"></div>');
-		var inputgroup = $('<div class="input-group"></div>');
-		inputgroup.append('<span class="input-group-addon">' + vwords[i].word + '</span>');
-		var inputword = $('<input id="vword-input' + i + '" class="form-control input-sm" type="text" word-value="' + vwords[i].word + '"></input>');
-		if(vwords[i].definition != '') {
-			inputword.attr("value", vwords[i].definition);
-			inputword.prop("disabled", true);
-			inputgroup.append(inputword);
-		} else {
-			inputgroup.append(inputword);
-			inputgroup.append('<span class="input-group-btn"><button class="btn btn-secondary" type="button"><i class="fa fa-plus" aria-hidden="true"></i></button></span>');
-		}
-		
-		formgroup.append(inputgroup);
-		formwords.append(formgroup);
+		formwords.append(createInputGroup(i + "v", vwords[i].word, vwords[i].definition));
 	}
 	
-	$("#panel-info").append(formwords);    		
+	$("#panel-info").append(formwords);
+}
+
+function createInputGroup (id, word, definition) {
+	var formgroup = $('<div class="form-group"></div>');
+	var inputgroup = $('<div class="input-group"></div>');
+	inputgroup.append('<span class="input-group-addon">' + word+ '</span>');
+	var inputword = $('<input id="word-input' + id + '" class="form-control input-sm" type="text" word-value="' + word + '"></input>');
+	if(definition != '') {
+		inputword.attr("value", definition);
+		inputword.prop("disabled", true);
+		inputgroup.append(inputword);
+	} else {
+		inputgroup.append(inputword);
+		inputgroup.append('<span class="input-group-btn"><button class="btn btn-secondary" type="button" id-definition="word-input' + id + '" word-value="' + word + '" onclick="saveDefinition(this);"><i class="fa fa-plus" aria-hidden="true"></i></button></span>');
+	}
 	
+	formgroup.append(inputgroup);
+	
+	return formgroup;
 }

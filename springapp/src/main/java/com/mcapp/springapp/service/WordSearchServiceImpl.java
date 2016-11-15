@@ -111,9 +111,6 @@ public class WordSearchServiceImpl implements WordSearchService {
 
 	private boolean isSolution(WordSearch puzzle, int row, int col, Direction dir, String candidate) {
 		Position pos = new Position(row, col);
-//		if(this.isContainedInAWord(puzzle.getWords(), row, col, dir, candidate)) {
-//			return false;
-//		}
 		
 		for(int i = 0; i < candidate.length(); i++)
 		{
@@ -127,10 +124,6 @@ public class WordSearchServiceImpl implements WordSearchService {
 		}
 		
 		return true;
-	}
-	
-	private boolean isContainedInAWord(List<WordDto> words, int row, int col, Direction dir, String candidate) {
-		return words.stream().anyMatch(x -> x.getWord().contains(candidate));
 	}
 	
 	private Position move(Position pos, Direction dir) {

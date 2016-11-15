@@ -50,6 +50,11 @@ PanelCrossword.prototype.create = function () {
 	
     var crossword=new Crossword(this.id, this.crossword.board, this.crossword.boardWords);
     crossword.draw();
+    var panelinfo = $("#panel-info" + this.id);
+	for (var i = 0; i < this.crossword.boardWords.length; i++) {
+		panelinfo.append(createSimpleInputGroup( i + "CW", this.crossword.boardWords[i].word, this.crossword.boardWords[i].definition));
+	}    
+    
 }
 
 function PanelWordSearch (id, name, wordsearch) {
@@ -75,4 +80,22 @@ PanelWordSearch.prototype.create = function () {
 	
     var wordsearch=new WordSearch(this.id, this.wordsearch.board, this.wordsearch.boardWords);
     wordsearch.draw();
+    
+    var panelinfo = $("#panel-infoWS" + this.id);
+	for (var i = 0; i < this.wordsearch.words.length; i++) {
+		panelinfo.append('<p class="col-md-2">' + this.wordsearch.words[i].word + '</p>');
+	}
+}
+
+function createSimpleInputGroup (id, word, definition) {
+	var formgroup = $('<div class="form-group col-md-6"></div>');
+	var inputgroup = $('<div class="input-group"></div>');
+	inputgroup.append('<span class="input-group-addon">' + word+ '</span>');
+	var inputword = $('<input id="word-input' + id + '" class="form-control input-sm" type="text" word-value="' + word + '"></input>');
+	inputword.attr("value", definition);
+	inputword.prop("disabled", true);
+	inputgroup.append(inputword);
+	formgroup.append(inputgroup);
+	
+	return formgroup;
 }

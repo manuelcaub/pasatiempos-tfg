@@ -1,7 +1,5 @@
 package com.mcapp.springapp.service;
 
-import static org.junit.Assert.assertNotNull;
-
 import javax.annotation.Resource;
 
 import org.junit.Before;

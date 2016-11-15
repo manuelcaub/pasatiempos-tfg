@@ -1,6 +1,5 @@
 package com.mcapp.springapp.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;

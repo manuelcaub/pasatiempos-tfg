@@ -17,7 +17,7 @@
 	      		<div class="panel-heading text-center"># Nueva Sopa de Letras # <button data-toggle="collapse" data-parent="#accordion" href="#collapse-words" id="show" onclick='javascript:expand(showi)' type="button" class="btn btn-default btn-xs pull-right"><i id="showi" class="fa fa-chevron-down"></i></button></div>
 	      		<div class="panel-body">
 	      			<div class="row">
-	      				<div class="col-md-8" align="center"><svg id="svgWS" style="background-color:lightgrey" width="100" height="100"></svg></div>
+	      				<div class="col-md-8" align="center"><svg id="svgWS" width="100" height="100"></svg></div>
 	          			<div class="col-md-2">
 				            <form>
 				              <div class="form-group">
@@ -35,7 +35,7 @@
 	      				<div id="panel-info" class="panel-body"></div>
 	    			</div>
 	    		</div>
-	      		<div class="panel-footer" align="center"><button type="button" onclick="javascript:saveWordSearch()" class="btn btn-default"><i class="fa fa-cloud-upload"></i></button> <button type="button" onclick="javascript:newWordSearch()" class="btn btn-default"><i class="fa fa-refresh"></i></button></div>
+	      		<div class="panel-footer" align="center"><button type="button" onclick="javascript:saveWordSearch()" class="btn btn-default"><i class="fa fa-cloud-upload"></i> Guardar</button> <button type="button" onclick="javascript:newWordSearch()" class="btn btn-default"><i class="fa fa-refresh"></i> Generar</button></div>
     		</div>
   		</div>
   	</div>	
