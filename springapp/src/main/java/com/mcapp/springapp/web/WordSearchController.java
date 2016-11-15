@@ -2,7 +2,6 @@ package com.mcapp.springapp.web;
 
 import javax.annotation.Resource;
 
-import org.json.JSONObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcapp.springapp.domain.User;
+import com.mcapp.springapp.service.interfaces.PuzzleService;
 import com.mcapp.springapp.service.interfaces.WordSearchService;
 
 @Controller
@@ -20,6 +22,9 @@ public class WordSearchController {
 
 	@Resource
 	private WordSearchService srvWordSearch;
+	
+	@Resource
+	private PuzzleService srvPuzzle;
 	
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(value = "/wordsearch", method = RequestMethod.GET)
@@ -30,7 +35,7 @@ public class WordSearchController {
 	
 	@RequestMapping(value = "/newwordsearch", method = RequestMethod.GET, params = {"size", "words"})
 	@ResponseBody
-	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("words") int words) { 
-        return new JSONObject(this.srvWordSearch.generateWordSearchPuzzle(size, words)).toString();
+	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("words") int words) throws JsonProcessingException { 
+        return new ObjectMapper().writeValueAsString(this.srvWordSearch.generateWordSearchPuzzle(size, words));
 	}
 }

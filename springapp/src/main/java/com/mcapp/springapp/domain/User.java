@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -38,10 +37,6 @@ public class User implements Serializable {
 	
 	@Column(name = "creationTimestamp")
 	private Timestamp creationTimestamp;
-	
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "country")
-    private Country country;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user2role", joinColumns = @JoinColumn(name = "user"), inverseJoinColumns = @JoinColumn(name = "role"))
@@ -55,7 +50,6 @@ public class User implements Serializable {
 		this.name = nombre;
 		this.email = email;
 		this.password = password;
-		this.country = country;
 	}
 
 	public int getId() {
@@ -96,14 +90,6 @@ public class User implements Serializable {
 
 	public void setCreationTimestamp(Timestamp creationTimestamp) {
 		this.creationTimestamp = creationTimestamp;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
 	}
 	
     public Set<Role> getRoles() {

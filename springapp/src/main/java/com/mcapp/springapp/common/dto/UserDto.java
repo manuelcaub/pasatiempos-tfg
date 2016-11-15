@@ -2,23 +2,30 @@ package com.mcapp.springapp.common.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.Email;
 
 import com.mcapp.springapp.domain.User;
 
 public class UserDto {
 
+	@NotNull
 	private int id;
 	
+	@NotNull
 	private String name;
 	
-	private String country;
-	
 	@Email
+	@NotNull
 	private String email;
 	
+	@NotNull
+	@Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{8}$")
 	private String password;
 	
+	@NotNull
 	private String passwordConfirm;
 	
 	private List<String> roles;
@@ -63,14 +70,6 @@ public class UserDto {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
 	}
 
 	public List<String> getRoles() {

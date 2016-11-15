@@ -1,7 +1,5 @@
 package com.mcapp.springapp.web;
 
-import java.security.Principal;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mcapp.springapp.common.dto.Crossword;
 import com.mcapp.springapp.common.dto.WordDto;
 import com.mcapp.springapp.domain.User;
 import com.mcapp.springapp.service.interfaces.CrosswordService;
@@ -49,13 +46,6 @@ public class CrosswordController {
 	@ResponseBody
 	public String setDefinition (@RequestBody WordDto word) { 
         this.srvWord.setDefinition(word.getWord(), word.getDefinition());
-        return "success";
-	}
-	
-	@RequestMapping(value = "/savecrossword", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveCrossword (@RequestBody Crossword crossword, Principal principal) {
-		this.srvPasatiempo.saveCrossword(crossword, principal.getName());
         return "success";
 	}
 }

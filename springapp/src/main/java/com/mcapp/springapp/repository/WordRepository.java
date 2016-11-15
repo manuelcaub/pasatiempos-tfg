@@ -40,6 +40,15 @@ public class WordRepository extends AbstractRepository<Word> {
 	}
 	
 	@Transactional(readOnly = true)
+	public List<String> getWordsBetween(int min, int max){
+		String sql = "SELECT w.withoutMarksUpper"+
+		          " FROM   word w"+
+		          " WHERE w.length BETWEEN :min AND :max order by rand();";
+		
+		return (List<String>)this.hibernate().createNativeQuery(sql).setParameter("min", min).setParameter("max", max).getResultList();
+	}
+	
+	@Transactional(readOnly = true)
 	public List<Word> getWordsByMaxLength(int length) {
 		@SuppressWarnings("unchecked")
 		List<Word> words = (List<Word>) this.hibernate()

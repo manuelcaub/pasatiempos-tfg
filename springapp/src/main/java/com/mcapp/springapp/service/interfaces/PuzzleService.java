@@ -1,19 +1,10 @@
 package com.mcapp.springapp.service.interfaces;
 
-import java.util.List;
-
-import com.mcapp.springapp.common.dto.Crossword;
-import com.mcapp.springapp.common.dto.WordSearch;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface PuzzleService {
 	
-	public void saveCrossword(Crossword crossword, String user);
-	
-	public List<String> getCrosswordByUser(String user);
-	
-	public void saveWordSearch(WordSearch wordsearch, String user);
-	
-	public List<WordSearch> getWordSearchByUser(String user);
+	public void savePuzzle(Object specificPuzzle, String user) throws JsonProcessingException;
 	
 	public String getPuzzlesByUser(String user);
 }

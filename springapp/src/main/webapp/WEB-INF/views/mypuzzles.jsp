@@ -8,6 +8,7 @@
 	<script src="<c:url value="/resources/js/mypuzzles.js"/>"></script>
 	<script src="<c:url value="/resources/js/pastime-util.js"/>"></script>
 	<script src="<c:url value="/resources/js/crossword.js"/>"></script>
+	<script src="<c:url value="/resources/js/wordsearch.js"/>"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/header.jsp" %>

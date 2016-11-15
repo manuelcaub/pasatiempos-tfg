@@ -1,20 +1,25 @@
 package com.mcapp.springapp.common.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WordSearch {
-	
-	private final int size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class WordSearch implements Serializable {
+
+	private static final long serialVersionUID = 6803519417211487867L;
+
+	private int size;
 	
 	private char[][] board;
 
 	private List<Position> positions;
 	
-	private final List<Direction> directions;
+	private List<Direction> directions;
 	
-	private List<String> words;
+	private List<WordDto> words;
 	
 	private QuoteDto quote;
 	
@@ -22,9 +27,13 @@ public class WordSearch {
 	
 	private final String type = "wordsearch";
 	
+	public WordSearch () {
+		this.directions = Arrays.asList(Direction.values());
+	}
+	
 	public WordSearch(int size, List<Direction> directions) {
 		this.size = size;
-		this.words = new ArrayList<String>();
+		this.words = new ArrayList<WordDto>();
 		this.initializeBoard();
 		
 		if(directions == null) {
@@ -69,7 +78,7 @@ public class WordSearch {
 		return directions;
 	}
 
-	public List<String> getWords() {
+	public List<WordDto> getWords() {
 		return words;
 	}
 
@@ -100,8 +109,8 @@ public class WordSearch {
 		}
 		
 		str.append('\n');
-		for(String word : this.words) {
-			str.append(word + '\n');
+		for(WordDto word : this.words) {
+			str.append(word.getWord() + '\n');
 		}
 		
 		if(this.getQuoteDto() != null) {

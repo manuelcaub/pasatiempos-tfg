@@ -42,7 +42,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 		if(this.backtracking(crossword, allWords, sessionId)){
 			// Después de generar el crucigrama, se establecen las palabras verticales ya que no han sido
 			// establecidas en el algoritmo (simplemente comprobadas).
-			for(WordDto w : crossword.getBoardWords().stream().filter(x -> x.getDirection() == Direction.Vertical).collect(Collectors.toList())) {
+			for(WordDto w : crossword.getBoardWords().stream().filter(x -> x.getDirection() == Direction.S).collect(Collectors.toList())) {
 				StringBuilder str = new StringBuilder();
 				for(int i = w.getRow(); i < w.getRow() + w.getLength(); i++){
 					str.append(crossword.getBoard()[i][w.getCol()]);
@@ -97,12 +97,12 @@ public class CrosswordServiceImpl implements CrosswordService {
 				if (board[row][col] == WHITE) {
 					length++;
 					if (col == board.length - 1) {
-						words.add(new WordDto(row, col - (length - 1), Direction.Horizontal, length));
+						words.add(new WordDto(row, col - (length - 1), Direction.E, length));
 						length = 0;
 					}
 					
 				} else if (board[row][col] == BLACK && length > 0) {
-					words.add(new WordDto(row, col - length, Direction.Horizontal, length));
+					words.add(new WordDto(row, col - length, Direction.E, length));
 					length = 0;
 				}
 			}
@@ -117,13 +117,13 @@ public class CrosswordServiceImpl implements CrosswordService {
 					{					
 						length++;
 						if (row == board.length - 1) {
-							words.add(new WordDto(row - (length - 1), col, Direction.Vertical, length));
+							words.add(new WordDto(row - (length - 1), col, Direction.S, length));
 							length = 0;
 						}
 						
 					}
 				} else if (board[row][col] == BLACK && length > 0) {
-					words.add(new WordDto(row - length, col, Direction.Vertical, length));
+					words.add(new WordDto(row - length, col, Direction.S, length));
 					length = 0;
 				}
 			}
@@ -184,7 +184,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 
 			// Si hay intersección
 			if ((gap.getRow() > 0 && crossword.getBoard()[gap.getRow() - 1][j] != BLACK) || (gap.getRow() < crossword.getSize() - 1 && crossword.getBoard()[gap.getRow() + 1][j] != BLACK)) {
-				final WordDto interseccion = crossword.getBoardWords().parallelStream().filter(x -> x.getDirection() == Direction.Vertical && x.getCol() == auxj && x.getRow() <= gap.getRow() && x.getRow() + x.getLength() >= gap.getRow()).findFirst().get();
+				final WordDto interseccion = crossword.getBoardWords().parallelStream().filter(x -> x.getDirection() == Direction.S && x.getCol() == auxj && x.getRow() <= gap.getRow() && x.getRow() + x.getLength() >= gap.getRow()).findFirst().get();
 				StringBuilder palabraParcial = new StringBuilder();
 				for(int posicionInterseccion = interseccion.getRow(); posicionInterseccion < gap.getRow(); posicionInterseccion++) {
 					palabraParcial.append(crossword.getBoard()[posicionInterseccion][interseccion.getCol()]);
@@ -232,6 +232,6 @@ public class CrosswordServiceImpl implements CrosswordService {
 	 */
 	private WordDto getFirstGap(List<WordDto> wordGaps) {
 		// TODO cambiar orElse(null) para evitar nulos
-		return wordGaps.parallelStream().filter(x -> x.getDirection() == Direction.Horizontal && x.getWord() == null).findFirst().orElse(null);
+		return wordGaps.parallelStream().filter(x -> x.getDirection() == Direction.E && x.getWord() == null).findFirst().orElse(null);
 	}
 }

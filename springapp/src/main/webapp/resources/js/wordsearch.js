@@ -1,8 +1,6 @@
-
-var ancho = 20;  // Ancho de cada casilla
-var alto = 20;   // Alto de cada casilla
-var grosor = 2;  // Grosor del borde de cada casilla
-var fontSize = ancho/2;
+var width = 20;  // Ancho de cada casilla
+var height = 20;   // Alto de cada casilla
+var fontSize = width/2;
 var namespace="http://www.w3.org/2000/svg";
 
 function createWordSearch(jsonObject) {
@@ -13,53 +11,55 @@ function createWordSearch(jsonObject) {
 		obj = jsonObject;
 	}
 	
-    var tablero=new Tablero(obj.board);
-    tablero.draw();
+    var wordsearch=new WordSearch("", obj.board, obj.words);
+    wordsearch.draw();
 	if(typeof obj.quote != "undefined") {
-		$("#mySVG").after('<br><p>"' + obj.quote.valor + '", ' + obj.quote.autor + '</p>');
+		$("#mySVG").after('<br><p>"' + obj.quote.quote + '", ' + obj.quote.author + '</p>');
 	}
 }
 
-function Tablero(texto) {
-    this.filas=texto.length;
-    this.columnas=texto[0].length;
-    this.texto=texto;
+function WordSearch(id, board, words) {
+	this.id = id;
+    this.rows=board.length;
+    this.cols=board[0].length;
+    this.board=board;
+    this.words = words;
 }
 
-Tablero.prototype.draw = function() {
-    var lienzo=document.getElementById("mySVG");
-    lienzo.setAttribute("width", this.filas * ancho);
-    lienzo.setAttribute("height", this.columnas * alto);
+WordSearch.prototype.draw = function() {
+    var svg=document.getElementById("svgWS"  + this.id);
+    svg.setAttribute("width", this.rows * width);
+    svg.setAttribute("height", this.cols * height);
 
-    for (var i=0; i<this.filas; i++) {
-        for (var j=0; j<this.columnas; j++) {
-            var casilla=new Casilla(i, j, this.texto[i][j]);
-            lienzo.appendChild(casilla.grupo);
+    for (var i=0; i<this.rows; i++) {
+        for (var j=0; j<this.cols; j++) {
+            var box=new WSBox(i, j, this.board[i][j]);
+            svg.appendChild(box.group);
         }
     }
 }
 
-function Casilla(fila, columna, letra) {
-    this.grupo=document.createElementNS(namespace, "g");
+function WSBox(row, col, letter) {
+    this.group=document.createElementNS(namespace, "g");
 
     var rect=document.createElementNS(namespace, "rect");
-    rect.setAttribute("x", columna*ancho);
-    rect.setAttribute("y", fila*alto);
-    rect.setAttribute("width", ancho);
-    rect.setAttribute("height", alto);
+    rect.setAttribute("x", col*width);
+    rect.setAttribute("y", row*height);
+    rect.setAttribute("width", width);
+    rect.setAttribute("height", height);
     rect.setAttribute("fill", "white");
-    var centroX=columna*ancho+ancho/2;
-    var centroY=fila*alto+alto/2;
+    var centerX=col*width+width/2;
+    var centerY=row*height+height/2;
 
-    var caja=document.createElementNS(namespace, "text");
-    caja.setAttribute("contentEditable", "true");
-    caja.setAttribute("fill", "black");
-    caja.setAttribute("text-anchor", "middle");
-    caja.setAttribute("font-size", ancho*0.75);
-    caja.innerHTML=letra;
-    caja.setAttribute("x", centroX - 0.25*ancho);
-    caja.setAttribute("y", centroY + 0.25*alto);
+    var box=document.createElementNS(namespace, "text");
+    box.setAttribute("contentEditable", "true");
+    box.setAttribute("fill", "black");
+    box.setAttribute("text-anchor", "middle");
+    box.setAttribute("font-size", width*0.75);
+    box.innerHTML=letter;
+    box.setAttribute("x", centerX - 0.25*width);
+    box.setAttribute("y", centerY + 0.25*height);
 
-    this.grupo.appendChild(rect);
-    this.grupo.appendChild(caja);
+    this.group.appendChild(rect);
+    this.group.appendChild(box);
 }

@@ -62,10 +62,10 @@ function insertWords(words) {
 	$("#panel-info").empty();
 	var formwords = $("<form></form>");
 	var vwords = words.filter(function(obj){
-		return obj.direction == "vertical";
+		return obj.direction == "s";
 	});
 	var hwords = words.filter(function(obj){
-		return obj.direction == "horizontal";
+		return obj.direction == "e";
 	});
 	
 	formwords.append('<h4>Horizontales</h4>');

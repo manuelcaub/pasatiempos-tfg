@@ -8,11 +8,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.mcapp.springapp.common.dto.Direction;
 import com.mcapp.springapp.common.dto.Position;
 import com.mcapp.springapp.common.dto.QuoteDto;
+import com.mcapp.springapp.common.dto.WordDto;
 import com.mcapp.springapp.common.dto.WordSearch;
 import com.mcapp.springapp.domain.Quote;
 import com.mcapp.springapp.repository.QuoteRepository;
@@ -21,6 +24,8 @@ import com.mcapp.springapp.service.interfaces.WordSearchService;
 
 @Service
 public class WordSearchServiceImpl implements WordSearchService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WordSearchService.class);
 	
 	@Resource
 	private WordRepository repWord;
@@ -37,26 +42,23 @@ public class WordSearchServiceImpl implements WordSearchService {
 	}
 	
 	public WordSearch generateWordSearchPuzzle(int size, int numWords) {
-		List<String> words = this.repWord.getWordsByMaxLength(size).parallelStream().map(x -> x.getWord()).collect(Collectors.toList());
-		Collections.shuffle(words);
+		List<String> words = this.repWord.getWordsBetween(3, size);
 		WordSearch puzzle = new WordSearch(size);
-		this.backtracking(puzzle, words, numWords, 0);
+		this.backtracking(puzzle, words, words, numWords, 0);
 		
 		Quote quote = this.repQuote.getQuoteByLength(this.countEmpty(puzzle.getBoard()));
-		QuoteDto quoteDto = new QuoteDto(quote);
-
+		logger.debug("HOLA MUNDO");
 		if(quote == null) {
 			this.fillBoard(puzzle);
 		} else {
+			QuoteDto quoteDto = new QuoteDto(quote);
 			this.insertQuote(puzzle, quoteDto);
 		}
 		
 		return puzzle;
 	}
 	
-	private boolean backtracking(WordSearch puzzle, List<String> words, int numWords, int step) {
-		// Se escoge una palabra candidata que no se haya 
-		String candidate = words.parallelStream().filter(x -> !puzzle.getWords().contains(x)).unordered().findAny().get();
+	private boolean backtracking(WordSearch puzzle, List<String> candidates, List<String> words, int numWords, int step) {
 		
 		// Caso base, si se han establecido todas las palabras indicadas.
 		if (step == numWords)
@@ -64,19 +66,22 @@ public class WordSearchServiceImpl implements WordSearchService {
 
 		// Se reordena la lista de posiciones para que las palabras se establezcan más desordenadas en el tablero
 		Collections.shuffle(puzzle.getPositions());
-		for (Position pos : puzzle.getPositions()) {
-			// Se reordena la lista de direcciones para que se estudien aleatoriamente.
-			Collections.shuffle(puzzle.getDirections());
-			for (Direction dir : puzzle.getDirections()) {
-				if(this.isSolution(puzzle, pos, dir, candidate)) {
-					puzzle.getWords().add(candidate);
-					String previous = this.updateBoard(puzzle, pos, dir, candidate);
-					if(this.backtracking(puzzle, words, numWords, step + 1)) {
-						return true;
+		// Se reordena la lista de direcciones para que se estudien aleatoriamente.
+		Collections.shuffle(puzzle.getDirections());
+		for (String candidate : candidates) {
+			for (Position pos : puzzle.getPositions()) {
+				for (Direction dir : puzzle.getDirections()) {
+					if(this.isSolution(puzzle, pos.getRow(), pos.getColumn(), dir, candidate)) {
+						WordDto word = new WordDto(candidate, pos, dir, candidate.length());
+						puzzle.getWords().add(word);
+						String previous = this.updateBoard(puzzle, pos.getRow(), pos.getColumn(), dir, candidate);
+						if(this.backtracking(puzzle, words.parallelStream().filter(x -> puzzle.getWords().stream().allMatch(y -> !x.contains(y.getWord()) && !y.getWord().contains(x))).unordered().collect(Collectors.toList()), words, numWords, step + 1)) {
+							return true;
+						}
+						
+						puzzle.getWords().remove(word);
+						this.deleteWord(puzzle, pos.getRow(), pos.getColumn(), dir, previous);
 					}
-					
-					puzzle.getWords().remove(candidate);
-					this.deleteWord(puzzle, pos, dir, previous);
 				}
 			}
 		}
@@ -84,14 +89,16 @@ public class WordSearchServiceImpl implements WordSearchService {
 		return false;
 	}
 
-	private void deleteWord(WordSearch puzzle, Position pos, Direction dir, String previous) {
+	private void deleteWord(WordSearch puzzle, int row, int col, Direction dir, String previous) {
+		Position pos = new Position(row, col);
 		for (int i = 0; i < previous.length(); i++) {
 			puzzle.getBoard()[pos.getRow()][pos.getColumn()] = previous.charAt(i);
 			pos = move(pos, dir);
 		}
 	}
 
-	private String updateBoard(WordSearch puzzle, Position pos, Direction dir, String candidate) {
+	private String updateBoard(WordSearch puzzle, int row, int col, Direction dir, String candidate) {
+		Position pos = new Position(row, col);
 		StringBuilder previous = new StringBuilder();
 		for (int i = 0; i < candidate.length(); i++) {
 			previous.append(puzzle.getBoard()[pos.getRow()][pos.getColumn()]);
@@ -102,7 +109,12 @@ public class WordSearchServiceImpl implements WordSearchService {
 		return previous.toString();
 	}
 
-	private boolean isSolution(WordSearch puzzle, Position pos, Direction dir, String candidate) {
+	private boolean isSolution(WordSearch puzzle, int row, int col, Direction dir, String candidate) {
+		Position pos = new Position(row, col);
+//		if(this.isContainedInAWord(puzzle.getWords(), row, col, dir, candidate)) {
+//			return false;
+//		}
+		
 		for(int i = 0; i < candidate.length(); i++)
 		{
 			if(pos.getRow() >= puzzle.getSize() || pos.getColumn() >= puzzle.getSize() || pos.getRow() < 0 || pos.getColumn() < 0 
@@ -117,23 +129,27 @@ public class WordSearchServiceImpl implements WordSearchService {
 		return true;
 	}
 	
+	private boolean isContainedInAWord(List<WordDto> words, int row, int col, Direction dir, String candidate) {
+		return words.stream().anyMatch(x -> x.getWord().contains(candidate));
+	}
+	
 	private Position move(Position pos, Direction dir) {
 		switch(dir) {
-		case DiagonalDown:
+		case SE:
 			return new Position(pos.getRow() - 1, pos.getColumn() + 1);
-		case DiagonalDownLeft:
+		case SW:
 			return new Position(pos.getRow() - 1, pos.getColumn() - 1);
-		case DiagonalUp:
+		case NE:
 			return new Position(pos.getRow() + 1, pos.getColumn() + 1);
-		case DiagonalUpLeft:
+		case NW:
 			return new Position(pos.getRow() + 1, pos.getColumn() - 1);
-		case Horizontal:
+		case E:
 			return new Position(pos.getRow(), pos.getColumn() + 1);
-		case HorizontalB:
+		case W:
 			return new Position(pos.getRow(), pos.getColumn() - 1);
-		case Vertical:
+		case S:
 			return new Position(pos.getRow() - 1, pos.getColumn());
-		case VerticalB:
+		case N:
 			return new Position(pos.getRow() + 1, pos.getColumn());
 		default:
 			return null;

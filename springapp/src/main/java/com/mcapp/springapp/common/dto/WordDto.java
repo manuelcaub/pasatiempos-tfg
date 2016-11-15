@@ -23,6 +23,13 @@ public class WordDto {
 		this.length = length;
 	}
 	
+	public WordDto(String word, Position pos, Direction direction, int length) {
+		this.word = word;
+		this.pos = pos;
+		this.direction = direction;
+		this.length = length;
+	}
+	
 	public WordDto(int row, int column, Direction direction, int length) {
 		this.pos = new Position(row, column);
 		this.direction = direction;

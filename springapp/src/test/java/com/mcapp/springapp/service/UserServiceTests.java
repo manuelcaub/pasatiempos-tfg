@@ -33,6 +33,5 @@ public class UserServiceTests {
         List<User> Users = this.srvUser.getUsers();
         assertTrue(Users.size() > 0);
         assertTrue(Users.get(0).getClass().equals(User.class));
-        assertNotNull(Users.get(0).getCountry());
     }
 }
