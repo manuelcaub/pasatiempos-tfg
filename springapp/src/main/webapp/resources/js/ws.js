@@ -28,7 +28,7 @@ function conectarWebSocket() {
 		} else if (type=="CROSSWORD") {
 			createCrossword(message.puzzle);
 		} else if (type=="WORDSEARCH") {
-			createWordSearch(message.puzzle);
+			createWordSearch(message.puzzle);	
 		}
 	}		
 }
