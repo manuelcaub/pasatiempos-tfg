@@ -30,16 +30,6 @@ public class WordServiceTests {
     }
     
     @Test
-    public void testGetWordsListByMaxLength() {
-        List<Word> Words = this.srvWord.getWordsByMaxLength(5);
-        assertTrue(Words.stream().allMatch(x -> x.getLength() < 5));
-        assertTrue(Words.size() > 0);
-        assertTrue(Words.get(0).getClass().equals(Word.class));
-        assertNotNull(Words.get(0).getLanguage());
-        assertTrue(Words.get(0).getDefinitions().size() > 0);
-    }
-    
-    @Test
     public void testGetDefinition() {
     	String definiciones = this.srvWord.getDefinition("A");
     	assertNotNull(definiciones);

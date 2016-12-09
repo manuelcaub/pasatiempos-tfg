@@ -17,13 +17,22 @@
 		  </security:authorize>
 		  <security:authorize access="isAuthenticated()">
 		      <ul class="nav navbar-nav navbar-left">
-              	<li><a href="/springapp/crossword.html"> <spring:message code="crossword.title"></spring:message></a></li>
-              	<li><a href="/springapp/wordsearch.html"> <spring:message code="wordsearch.title"></spring:message></a></li>
-              	<li><a href="/springapp/mypuzzles.html"> <spring:message code="mypuzzles.title"></spring:message></a></li>
+              	<li><a href="/springapp/secure/crossword.html"> <spring:message code="crossword.title"></spring:message></a></li>
+              	<li><a href="/springapp/secure/wordsearch.html"> <spring:message code="wordsearch.title"></spring:message></a></li>
           	  </ul>
 	          <ul class="nav navbar-nav navbar-right">
-	              <li><p class="navbar-text"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Hola <security:authentication property="principal.username" /></p></li>
-	              <li><a href="javascript:formSubmit()"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i> Cerrar sesión</a></li>
+	              <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Hola <security:authentication property="principal.username" /></a>
+              		  <ul class="dropdown-menu">
+              		      <li><a href="/springapp/secure/mypuzzles.html"> <spring:message code="mypuzzles.title"></spring:message></a></li>
+              		      <security:authorize access="hasAuthority('ROLE_COLLABORATOR')">
+		  	  		  		  <li><a href="/springapp/secure/data.html"><i class="fa fa-database fa-lg" aria-hidden="true"></i> Datos</a></li>
+		  		  		  </security:authorize>
+              		  	  <security:authorize access="hasAuthority('ROLE_ADMIN')">
+		  	  		  		  <li><a href="/springapp/secure/users.html"><i class="fa fa-users fa-lg" aria-hidden="true"></i> Usuarios</a></li>
+		  		  		  </security:authorize>
+	  	  		      	  <li><a href="javascript:formSubmit()"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i> Cerrar sesión</a></li>
+       				  </ul>
+	              </li>
 	          </ul>
 		  </security:authorize>
 		  <form:form id="logoutForm" method="POST" modelAttribute="usuarioLogout" commandName="usuarioLogout" action="/springapp/j_spring_security_logout.action" class="form-signin">

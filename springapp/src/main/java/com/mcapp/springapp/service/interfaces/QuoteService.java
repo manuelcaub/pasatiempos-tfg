@@ -10,4 +10,5 @@ public interface QuoteService {
 	
 	public Quote getQuoteByLength(int longitud);
 
+	public void saveQuote(String quote, String author);
 }

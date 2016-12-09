@@ -18,7 +18,7 @@
 
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-								<form:input type="text" class="form-control" name="nombre" id="nombre" path="nombre" placeholder="${register.firstNamePH}" required="true"/>
+								<form:input type="text" class="form-control" name="name" id="name" path="name" placeholder="${register.firstNamePH}" required="true"/>
 							</div>
 					</div>
 
@@ -53,11 +53,13 @@
 					</div>
 
 					<div class="form-group ">
+						<p>Al identificarte, aceptas nuestras <a href="/springapp/legalinfo.html">Condiciones de uso</a> y nuestro <a href="/springapp/legalinfo.html">Aviso de privacidad</a>.</p>
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-button"><spring:message code="register.submit"></spring:message></button>
 					</div>
 				</form:form>
 			</div>
 		</div>
 	</div>
+	<%@ include file="/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

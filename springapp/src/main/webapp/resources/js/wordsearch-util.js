@@ -9,7 +9,7 @@ function newWordSearch() {
 	        success : function(data) {
 	        	mywordsearch = data;
 	        	createWordSearch(data);
-	        	insertWordsUnderWordSearch(data.words, data.quote);
+	        	insertWordsUnderWordSearch(data.words, data.quoteDto);
 	        }
 	    });
 	}
@@ -34,7 +34,7 @@ function saveWordSearch() {
 		}});
 }
 
-function insertWordsUnderWordSearch(words) {
+function insertWordsUnderWordSearch(words, quote) {
 	var panelInfo = $("#panel-info");
 	panelInfo.empty();
 	

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.mcapp.springapp.domain.Puzzle;
-import com.mcapp.springapp.domain.User;
 
 @Repository
 public class PuzzleRepository extends AbstractRepository<Puzzle> {
@@ -22,7 +21,7 @@ public class PuzzleRepository extends AbstractRepository<Puzzle> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Transactional
+	@Transactional(readOnly = true)
 	public String getPuzzlesByUser(String email) {
 		String query = String.format("SELECT p.puzzle"+
 		          " FROM   puzzle p JOIN user u ON p.user = u.id"+

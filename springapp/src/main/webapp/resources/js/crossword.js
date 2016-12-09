@@ -14,6 +14,7 @@
 
         Crossword.prototype.draw = function() {
             var svg=document.getElementById("svgCW" + this.id);
+            svg.setAttribute("xmlns", namespace);
             svg.setAttribute("width", this.rows * widthCW);
             svg.setAttribute("height", this.cols * heightCW);
 

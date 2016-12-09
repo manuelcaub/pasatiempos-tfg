@@ -31,18 +31,18 @@ public class CrosswordController {
 	@Resource
 	private PuzzleService srvPasatiempo;
 	
-	@RequestMapping(value = "/crossword", method = RequestMethod.GET)
+	@RequestMapping(value = "/secure/crossword", method = RequestMethod.GET)
 	public ModelAndView getCrosswordView (Model model) { 
         model.addAttribute("usuarioLogin", new User());
 	    return new ModelAndView("crossword");
 	}
 	
-	@RequestMapping(value = "/newcrossword", method = RequestMethod.GET)
+	@RequestMapping(value = "/secure/newcrossword", method = RequestMethod.GET)
 	public @ResponseBody String getNewCrossword (@RequestParam int size, @RequestParam int blacks, @RequestParam String sessionId) throws JsonProcessingException { 
 		return new ObjectMapper().writeValueAsString(this.srvCrossword.generateCrossword(size, blacks, sessionId));
 	}
 	
-	@RequestMapping(value = "/savedefinition", method = RequestMethod.POST)
+	@RequestMapping(value = "/secure/savedefinition", method = RequestMethod.POST)
 	@ResponseBody
 	public String setDefinition (@RequestBody WordDto word) { 
         this.srvWord.setDefinition(word.getWord(), word.getDefinition());

@@ -49,7 +49,6 @@ public class WordSearchServiceImpl implements WordSearchService {
 		this.backtracking(puzzle, words, words, numWords, 0, sessionId);
 		
 		Quote quote = this.repQuote.getQuoteByLength(this.countEmpty(puzzle.getBoard()));
-		logger.debug("HOLA MUNDO");
 		if(quote == null) {
 			this.fillBoard(puzzle);
 		} else {

@@ -26,4 +26,10 @@ public class WelcomeController {
         model.addAttribute("usuarioLogin", new User());
 	    return new ModelAndView("welcome");
 	}
+	
+	@RequestMapping(value ="/legalinfo", method = RequestMethod.GET)
+	public ModelAndView getLegalInfoView (Model model) {
+		model.addAttribute("usuarioLogin", new User());
+		return new ModelAndView("legalinfo");
+	}
 }

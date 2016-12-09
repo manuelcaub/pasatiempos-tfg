@@ -11,23 +11,26 @@ function createWordSearch(jsonObject) {
 		obj = jsonObject;
 	}
 	
-    var wordsearch=new WordSearch("", obj.board, obj.words);
+    var wordsearch=new WordSearch("", obj.board, obj.words, obj.quoteDto);
     wordsearch.draw();
-	if(typeof obj.quote != "undefined") {
-		$("#mySVG").after('<br><p>"' + obj.quote.quote + '", ' + obj.quote.author + '</p>');
+    $("#quoteWS").empty();
+	if(wordsearch.quote != null) {
+		$("#quoteWS").append('"' + wordsearch.quote.quote + '" (' + wordsearch.quote.author + ')');
 	}
 }
 
-function WordSearch(id, board, words) {
+function WordSearch(id, board, words, quote) {
 	this.id = id;
     this.rows=board.length;
     this.cols=board[0].length;
     this.board=board;
     this.words = words;
+    this.quote = quote;
 }
 
 WordSearch.prototype.draw = function() {
     var svg=document.getElementById("svgWS"  + this.id);
+    svg.setAttribute("xmlns", namespace);
     svg.setAttribute("width", this.rows * width);
     svg.setAttribute("height", this.cols * height);
 

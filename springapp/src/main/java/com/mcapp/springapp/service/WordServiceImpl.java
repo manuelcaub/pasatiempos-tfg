@@ -1,6 +1,5 @@
 package com.mcapp.springapp.service;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -24,11 +23,6 @@ public class WordServiceImpl implements WordService {
 	}
 	
 	@Override
-	public List<Word> getWordsByMaxLength(int longitud) {
-		return this.repWord.getWordsByMaxLength(longitud);
-	}
-	
-	@Override
 	public String getDefinition(String word) {
 		return this.repWord.getDefinition(word);
 	}
@@ -39,4 +33,15 @@ public class WordServiceImpl implements WordService {
 		word.getDefinitions().add(new Definition(definition));
 		this.repWord.saveOrUpdate(word);
 	}
+
+	@Override
+	public void saveWord(String word, String definition) {
+		this.repWord.saveOrUpdate(new Word(word, definition));
+	}
+
+	@Override
+	public void saveWord(String word) {
+		this.repWord.saveOrUpdate(new Word(word));
+	}
+	
 }

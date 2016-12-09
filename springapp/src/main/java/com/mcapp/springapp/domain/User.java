@@ -2,6 +2,7 @@ package com.mcapp.springapp.domain;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,11 +39,12 @@ public class User implements Serializable {
 	@Column(name = "creationTimestamp")
 	private Timestamp creationTimestamp;
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user2role", joinColumns = @JoinColumn(name = "user"), inverseJoinColumns = @JoinColumn(name = "role"))
     private Set<Role> roles;
 
-    public User(){
+    public User() {
+    	this.roles = new HashSet<Role>();
     }
     
 	public User(int id, String nombre, String email, String password, Country country) {
@@ -50,6 +52,7 @@ public class User implements Serializable {
 		this.name = nombre;
 		this.email = email;
 		this.password = password;
+		this.roles = new HashSet<Role>();
 	}
 
 	public int getId() {

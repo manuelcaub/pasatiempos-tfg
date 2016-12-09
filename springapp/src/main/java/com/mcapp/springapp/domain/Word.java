@@ -54,6 +54,15 @@ public class Word implements Serializable {
     public Word(){
     	this.definitions = new HashSet<Definition>();
     }
+    
+    public Word(String word) {
+    	this();
+    	this.word = word;
+    }
+    public Word(String word, String definition) {
+    	this(word);
+    	this.definitions.add(new Definition(definition));
+    }
 
 	public int getId() {
 		return id;

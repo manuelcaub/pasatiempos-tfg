@@ -32,24 +32,24 @@ public class MyPuzzlesController {
 	@Resource
 	private PuzzleService srvPuzzle;
 	
-	@RequestMapping(value = "/mypuzzles", method = RequestMethod.GET)
+	@RequestMapping(value = "/secure/mypuzzles", method = RequestMethod.GET)
 	public ModelAndView getMyPuzzlesView (Model model) {
 		model.addAttribute("usuarioLogin", new User());
 		return new ModelAndView("mypuzzles");
 	}
 	
-	@RequestMapping(value = "/getpuzzles", method = RequestMethod.GET)
+	@RequestMapping(value = "/secure/getpuzzles", method = RequestMethod.GET)
 	public String getCrosswords (Principal principal) { 
 		return this.srvPuzzle.getPuzzlesByUser(principal.getName());
 	}
 	
-	@RequestMapping(value = "/removepuzzle", method = RequestMethod.POST)
+	@RequestMapping(value = "/secure/removepuzzle", method = RequestMethod.POST)
 	public String removePuzzle (@RequestBody FilterRemovePuzzle filter, Principal principal) { 
 		this.srvPuzzle.removePuzzle(filter.getPuzzle(), principal.getName());
 		return "success";
 	}
 
-	@RequestMapping(value = "/savewordsearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/secure/savewordsearch", method = RequestMethod.POST)
 	public String saveWordSearch (@RequestBody WordSearch wordsearch, Principal principal) {
 		try {
 			this.srvPuzzle.savePuzzle(wordsearch, principal.getName());
@@ -60,7 +60,7 @@ public class MyPuzzlesController {
         return "success";
 	}
 	
-	@RequestMapping(value = "/savecrossword", method = RequestMethod.POST)
+	@RequestMapping(value = "/secure/savecrossword", method = RequestMethod.POST)
 	public String saveWordSearch (@RequestBody Crossword crossword, Principal principal) {
 		try {
 			this.srvPuzzle.savePuzzle(crossword, principal.getName());

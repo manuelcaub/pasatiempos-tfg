@@ -27,13 +27,13 @@ public class WordSearchController {
 	private PuzzleService srvPuzzle;
 	
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "/wordsearch", method = RequestMethod.GET)
+	@RequestMapping(value = "/secure/wordsearch", method = RequestMethod.GET)
 	public ModelAndView getWordSearchView (Model model) { 
         model.addAttribute("usuarioLogin", new User());
 	    return new ModelAndView("wordsearch");
 	}
 	
-	@RequestMapping(value = "/newwordsearch", method = RequestMethod.GET, params = {"size", "words"})
+	@RequestMapping(value = "/secure/newwordsearch", method = RequestMethod.GET, params = {"size", "words"})
 	@ResponseBody
 	public String getNewCrossword (@RequestParam("size") int size, @RequestParam("words") int words, @RequestParam("sessionId") String sessionId) throws JsonProcessingException { 
         return new ObjectMapper().writeValueAsString(this.srvWordSearch.generateWordSearchPuzzle(size, words, sessionId));

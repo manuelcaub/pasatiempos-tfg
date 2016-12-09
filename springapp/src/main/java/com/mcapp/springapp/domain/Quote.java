@@ -41,6 +41,11 @@ public class Quote implements Serializable {
     
     public Quote(){
     }
+    
+    public Quote(String quote, String author) {
+    	this.quote = quote;
+    	this.author = author;
+    }
 
 	public int getId() {
 		return id;

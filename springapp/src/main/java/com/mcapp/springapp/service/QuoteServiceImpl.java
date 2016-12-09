@@ -24,4 +24,9 @@ public class QuoteServiceImpl implements QuoteService {
 	public Quote getQuoteByLength(int longitud) {
 		return this.repQuote.getQuoteByLength(longitud);
 	}
+
+	@Override
+	public void saveQuote(String quote, String author) {
+		this.repQuote.saveOrUpdate(new Quote(quote, author));
+	}
 }

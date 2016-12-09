@@ -27,6 +27,8 @@ public class CrosswordServiceImpl implements CrosswordService {
 	public final char WHITE = '.';
 	public final char BLACK = '-';
 	
+	private int count = 0;
+	
 	/**
 	 * Se encarga de realizar las operaciones necesarias para generar el crucigrama dado un tamaño y un porcentaje de espacios en negro.
 	 * @param size Tamaño de los lados del crucigrama.
@@ -37,7 +39,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 		Crossword crossword = new Crossword(sizeSide);
 		crossword.setBoard(this.initializeBoard(sizeSide, blackPercentage));
 		crossword.setBoardWords(this.initializeGaps(crossword.getBoard()));
-		Map<Integer, List<String>> allWords = this.repWord.getWordsOrderByLength(crossword.getBoardWords().stream().mapToInt(x -> x.getLength()).max().getAsInt());
+		Map<Integer, List<String>> allWords = this.repWord.getWordsOrderByLength();
 
 		if(this.backtracking(crossword, allWords, sessionId, 0)){
 			// Después de generar el crucigrama, se establecen las palabras verticales ya que no han sido
@@ -140,8 +142,6 @@ public class CrosswordServiceImpl implements CrosswordService {
 		if (gap == null)
 			return true;
 		
-		long time_start, time_end;
-		time_start = System.currentTimeMillis();
 		for (final String word : allWords.get(gap.getLength())) {
 			if (this.isSolution(gap, word, allWords, crossword)) {
 				this.updateBoard(crossword.getBoard(), gap, word);
@@ -154,19 +154,19 @@ public class CrosswordServiceImpl implements CrosswordService {
 				this.downdateBoard(crossword.getBoard(), gap, word);
 			}
 		}
-		
-		time_end = System.currentTimeMillis();
-		System.out.println("step " + step + " : " + (time_end - time_start));
-		
 
 		return false;
 	}
 	
 	private void sendCrossword(Crossword crossword, String sessionId) {
-		JSONObject jso = new JSONObject();
-		jso.put("type",  "CROSSWORD");
-		jso.put("puzzle", new JSONObject(crossword));
-		WSServer.send(sessionId, jso);
+		if (this.count++ == 0){
+			JSONObject jso = new JSONObject();
+			jso.put("type",  "CROSSWORD");
+			jso.put("puzzle", new JSONObject(crossword));
+			WSServer.send(sessionId, jso);
+		} else if (this.count == 10) {
+			this.count = 0;
+		}
 	}
 	
 	/**

@@ -90,3 +90,44 @@ body {
    from {-webkit-transform: rotateY(0deg) rotateX(0deg)  }
    to   {-webkit-transform: rotateY(360deg) rotateX(90deg)}
 }
+
+.selected {
+    background-color: brown;
+    color: #FFF;
+}
+
+.bg-green {
+	background-color: green;
+	color: white;
+}
+
+a:hover {
+ cursor:pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  height: 30px;
+  line-height: 30px;
+  background-color: grey;
+}
+
+.font-footer {
+	font-size: 80%;
+	margin-left: 10%;
+}
+
+.font-footer a {
+	color:navy;
+}
+
+html {
+  position: relative;
+}
+
+body {
+  margin-bottom: 30px;
+}

@@ -1,5 +1,7 @@
 package com.mcapp.springapp.repository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,49 +15,51 @@ import com.mcapp.springapp.domain.Word;
 @Repository
 public class WordRepository extends AbstractRepository<Word> {
 	
+	private Map<Integer, List<String>> mapWords;
+	
+	private List<String> words;
+	
 	public WordRepository() {
 		super(Word.class);
 	}
 	
 	@Transactional(readOnly = true)
-	public Map<Integer, List<String>> getWordsOrderByLength(int maxLength) {
-		Map<Integer, List<String>> mapWords = new HashMap<Integer, List<String>>();
-		List<String> allWords = this.getWords(maxLength);
-		for(int i = 1; i <= maxLength; i++) {
-			final int auxLength = i;
-			mapWords.put(i, allWords.stream().filter(x -> x.length() == auxLength).collect(Collectors.toList()));
+	public Map<Integer, List<String>> getWordsOrderByLength() {
+		if(this.mapWords == null) {
+			this.mapWords = new HashMap<Integer, List<String>>();
+			List<String> allWords = this.getWords();
+			int maxLength = Collections.max(allWords, Comparator.comparing(s -> s.length())).length();
+			for(int i = 1; i <= maxLength; i++) {
+				final int auxLength = i;
+				this.mapWords.put(i, allWords.stream().filter(x -> x.length() == auxLength).collect(Collectors.toList()));
+			}
 		}
 		
-		return mapWords;
-		
+		return this.mapWords;
 	}
 	
 	@Transactional(readOnly = true)
-	public List<String> getWords(int length){
+	public List<String> getWords(){
 		String sql = "SELECT w.withoutMarksUpper"+
 		          " FROM   word w"+
-		          " WHERE w.length <= :length order by rand();";
+		          " order by rand();";
 		
-		return (List<String>)this.hibernate().createNativeQuery(sql).setParameter("length", length).getResultList();
+		return (List<String>)this.hibernate().createNativeQuery(sql).getResultList();
 	}
 	
 	@Transactional(readOnly = true)
 	public List<String> getWordsBetween(int min, int max){
-		String sql = "SELECT w.withoutMarksUpper"+
-		          " FROM   word w"+
-		          " WHERE w.length BETWEEN :min AND :max order by rand();";
+		if (this.words == null) {
+			String sql = "SELECT w.withoutMarksUpper"+
+			          " FROM   word w"+
+			          " WHERE w.length order by rand();";
+			
+			this.words = (List<String>)this.hibernate().createNativeQuery(sql).getResultList();
+		} else {
+			Collections.shuffle(this.words);
+		}
 		
-		return (List<String>)this.hibernate().createNativeQuery(sql).setParameter("min", min).setParameter("max", max).getResultList();
-	}
-	
-	@Transactional(readOnly = true)
-	public List<Word> getWordsByMaxLength(int length) {
-		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) this.hibernate()
-				.createQuery("from Word as p where p.length < :length")
-				.setParameter("length", length).getResultList();
-		
-		return words;
+		return this.words.stream().filter(x -> x.length() <= max && x.length() >= min).collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
