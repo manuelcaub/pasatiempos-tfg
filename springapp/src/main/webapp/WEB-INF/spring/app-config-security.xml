@@ -11,7 +11,11 @@
     
     	<!-- access denied page -->
 		<access-denied-handler error-page="/403" />
-
+		<session-management>
+		    <concurrency-control
+		       max-sessions="1"
+		       expired-url="/welcome.html" />
+		</session-management>
     	<intercept-url pattern="/secure/**" access="isAuthenticated()" />
 		<!--  <intercept-url pattern="/admin**" access="hasRole('ADMINISTRADOR')" /> -->
         <!--  <intercept-url pattern="/welcome" access="hasRole('USUARIO')"/> -->

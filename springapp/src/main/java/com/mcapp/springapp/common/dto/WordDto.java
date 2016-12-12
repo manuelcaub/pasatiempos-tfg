@@ -8,6 +8,7 @@ public class WordDto {
 	private String word;
 	private int length;
 	private String definition;
+	private int number;
 
 	public WordDto() {
 	}
@@ -72,6 +73,14 @@ public class WordDto {
 		return this.length;
 	}
 	
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 	public String toString(){
 		return new JSONObject(this).toString();
 	}

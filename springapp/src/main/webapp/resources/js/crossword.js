@@ -29,18 +29,34 @@
             for (var i=0; i<this.words.length; i++){
                 var centerX=this.words[i].col*widthCW+widthCW/2;
                 var centerY=this.words[i].row*heightCW+heightCW/2;
+                var number = this.words[i].number;
                 var id = this.words[i].row +""+this.words[i].col;
-                if($.inArray(id, x) == -1){
-                	x.push(id);
+                if($.inArray(number, x) == -1){
+                	x.push(number);
                 	var group = svg.getElementById(id);
                     var box=document.createElementNS(namespace, "text");
                     box.setAttribute("contentEditable", "true");
                     box.setAttribute("fill", "black");
                     box.setAttribute("font-size", widthCW*0.002);
-                    box.innerHTML=x.length;
+                    box.innerHTML=number;
                     box.setAttribute("x", centerX - 0.45*widthCW);
                     box.setAttribute("y", centerY - 0.3*heightCW);
                     group.appendChild(box);
+                }
+            }
+        }
+        
+        Crossword.prototype.generateNumbers = function() {
+            var x=[];
+            var posNum = {};
+            for (var i=0; i<this.words.length; i++){
+                var id = this.words[i].row +""+this.words[i].col;
+                if($.inArray(id, x) == -1){
+                	x.push(id);
+                	posNum[id] = x.length;
+                	this.words[i].number = x.length;
+                } else {
+                	this.words[i].number = posNum[id];
                 }
             }
         }
@@ -83,5 +99,6 @@
         	}
         	
             var crossword=new Crossword("", obj.board, obj.boardWords);
+            crossword.generateNumbers();
             crossword.draw();
         }

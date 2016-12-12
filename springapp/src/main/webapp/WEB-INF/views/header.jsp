@@ -62,9 +62,6 @@
 	                <form:input type="password" class="form-control" id="pass" name="password" path="password" placeholder="Introduzca su contraseña"/>
 	              </spring:bind>
 	            </div>
-	            <div class="checkbox">
-	              <label><input type="checkbox" value="" checked>Recordarme</label>
-	            </div>
 	            <button type="submit" class="btn btn-success btn-block">Login</button>
 	            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	          </form:form>

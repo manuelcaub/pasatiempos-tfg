@@ -61,7 +61,7 @@ public class MyPuzzlesController {
 	}
 	
 	@RequestMapping(value = "/secure/savecrossword", method = RequestMethod.POST)
-	public String saveWordSearch (@RequestBody Crossword crossword, Principal principal) {
+	public String saveCrossword (@RequestBody Crossword crossword, Principal principal) {
 		try {
 			this.srvPuzzle.savePuzzle(crossword, principal.getName());
 		} catch (JsonProcessingException e) {
