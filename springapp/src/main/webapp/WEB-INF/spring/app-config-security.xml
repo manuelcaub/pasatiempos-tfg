@@ -17,8 +17,6 @@
 		       expired-url="/welcome.html" />
 		</session-management>
     	<intercept-url pattern="/secure/**" access="isAuthenticated()" />
-		<!--  <intercept-url pattern="/admin**" access="hasRole('ADMINISTRADOR')" /> -->
-        <!--  <intercept-url pattern="/welcome" access="hasRole('USUARIO')"/> -->
         
         <form-login login-page="/welcome.html" login-processing-url="/j_spring_security_check.action"  default-target-url="/welcome.html" authentication-failure-url="/login?error" username-parameter="email" password-parameter="password"/>
         <logout logout-success-url="/welcome.html" logout-url="/j_spring_security_logout.action" />

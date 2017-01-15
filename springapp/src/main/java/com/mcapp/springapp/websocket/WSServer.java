@@ -12,38 +12,38 @@ import org.json.JSONObject;
 
 @ServerEndpoint("/servidorWS")
 public class WSServer {
-	private static Hashtable<String, Session> sesiones=new Hashtable<>();
+	private static Hashtable<String, Session> sesions=new Hashtable<>();
 		
 	@OnOpen
 	public void open(Session session) {
-		sesiones.put(session.getId(), session);
+		sesions.put(session.getId(), session);
 		JSONObject jso=new JSONObject();
 		jso.put("type", "SESSION_ID");
 		jso.put("sessionId", session.getId());
 		send(session, jso);
-		System.out.println("Ha llegado un pringao");
+		System.out.println("Login " + session.getId());
 	}
 	
 	private void send(Session session, JSONObject jso) {
 		try {
 			session.getBasicRemote().sendText(jso.toString());
 		} catch (IOException e) {
-			sesiones.remove(session.getId());
+			sesions.remove(session.getId());
 		}
 	}
 	
 	public static void send(String sessionId, JSONObject jso) {
 		try {
-			Session session=sesiones.get(sessionId);
+			Session session=sesions.get(sessionId);
 			session.getBasicRemote().sendText(jso.toString());
 		} catch (IOException e) {
-			sesiones.remove(sessionId);
+			sesions.remove(sessionId);
 		}
 	}
 
 	@OnClose
 	public void close(Session session) {
-		sesiones.remove(session.getId());
-		System.out.println("Se fue un pringao");
+		sesions.remove(session.getId());
+		System.out.println("Logout " + session.getId());
 	}
 }

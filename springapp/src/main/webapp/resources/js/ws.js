@@ -4,9 +4,8 @@ var url="ws://" + window.location.hostname + ":" + window.location.port + "/spri
 var chat=null;
 
 function conectarWebSocket() {
-	if (chat!=null)
-		return;
-	chat=new WebSocket(url);
+	if (chat!=null) return;
+	chat = new WebSocket(url);
 
 	chat.onopen = function() {
 		document.getElementById("circle-ws").setAttribute("style", "color:green");

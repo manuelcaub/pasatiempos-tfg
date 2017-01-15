@@ -1,4 +1,4 @@
-package com.mcapp.springapp.service;
+ package com.mcapp.springapp.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 		crossword.setBoardWords(this.initializeGaps(crossword.getBoard()));
 		Map<Integer, List<String>> allWords = this.repWord.getWordsOrderByLength();
 
-		if(this.backtracking(crossword, allWords, sessionId, 0)){
+		if(this.backtracking(crossword, allWords, sessionId)){
 			// Después de generar el crucigrama, se establecen las palabras verticales ya que no han sido
 			// establecidas en el algoritmo (simplemente comprobadas).
 			for(WordDto w : crossword.getBoardWords().stream().filter(x -> x.getDirection() == Direction.S).collect(Collectors.toList())) {
@@ -84,6 +84,14 @@ public class CrosswordServiceImpl implements CrosswordService {
 			} while (board[row][column] == BLACK);
 
 			board[row][column] = BLACK;
+		}
+		
+		for (int i = 0; i < sizeSide; i++) {
+			for(int j = 0; j < sizeSide; j++) {
+				if((i + 1 == sizeSide || board[i+1][j] == BLACK) && (j + 1 == sizeSide || board[i][j+1] == BLACK) && (j == 0 || board[i][j-1] == BLACK) && (i == 0 || board[i-1][j] == BLACK)) {
+					board[i][j] = BLACK;
+				}
+			}
 		}
 
 		return board;
@@ -137,7 +145,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 	/**
 	 * Método que realiza la búsqueda mediante backtracking de las palabras que rellenarán los huecos del crucigrama.
 	 **/
-	private boolean backtracking(Crossword crossword, Map<Integer, List<String>> allWords, String sessionId, int step) {
+	private boolean backtracking(Crossword crossword, Map<Integer, List<String>> allWords, String sessionId) {
 		WordDto gap = this.getFirstGap(crossword.getBoardWords());
 		if (gap == null)
 			return true;
@@ -147,7 +155,7 @@ public class CrosswordServiceImpl implements CrosswordService {
 				this.updateBoard(crossword.getBoard(), gap, word);
 				this.sendCrossword(crossword, sessionId);
 				
-				if (this.backtracking(crossword, allWords, sessionId, step + 1)) {
+				if (this.backtracking(crossword, allWords, sessionId)) {
 					return true;
 				}
 				
@@ -174,7 +182,8 @@ public class CrosswordServiceImpl implements CrosswordService {
 	 * @return Devuelve 'true' si puede añadirse la palabra candidata al hueco, en caso contrario devuelve false.
 	 **/
 	private boolean isSolution(WordDto gap, String candidate, Map<Integer, List<String>> words, Crossword crossword) {
-		if(crossword.getBoardWords().stream().anyMatch((x -> x.getWord() != null && x.getWord().equals(candidate)))) {
+		// Si hay alguna palabra en el tablero igual que la palabra candidata esta no es solución
+		if(crossword.getBoardWords().stream().anyMatch(x -> x.getWord() != null && x.getWord().equals(candidate))) {
 			return false;
 		}
 		
@@ -189,20 +198,24 @@ public class CrosswordServiceImpl implements CrosswordService {
 
 			// Si hay intersección
 			if ((gap.getRow() > 0 && crossword.getBoard()[gap.getRow() - 1][j] != BLACK) || (gap.getRow() < crossword.getSize() - 1 && crossword.getBoard()[gap.getRow() + 1][j] != BLACK)) {
-				final WordDto interseccion = crossword.getBoardWords().parallelStream().filter(x -> x.getDirection() == Direction.S && x.getCol() == auxj && x.getRow() <= gap.getRow() && x.getRow() + x.getLength() >= gap.getRow()).findFirst().get();
-				StringBuilder palabraParcial = new StringBuilder();
-				for(int posicionInterseccion = interseccion.getRow(); posicionInterseccion < gap.getRow(); posicionInterseccion++) {
-					palabraParcial.append(crossword.getBoard()[posicionInterseccion][interseccion.getCol()]);
+				final WordDto intersection = crossword.getBoardWords().parallelStream().filter(x -> x.getDirection() == Direction.S && x.getCol() == auxj && x.getRow() <= gap.getRow() && x.getRow() + x.getLength() >= gap.getRow()).findFirst().get();
+				StringBuilder partialWord = new StringBuilder();
+				for(int positionIntersection = intersection.getRow(); positionIntersection < gap.getRow(); positionIntersection++) {
+					partialWord.append(crossword.getBoard()[positionIntersection][intersection.getCol()]);
 				}
 				
-				palabraParcial.append(candidate.charAt(auxk));
+				partialWord.append(candidate.charAt(auxk));
 				if(gap.getRow() < crossword.getSize() - 1 && crossword.getBoard()[gap.getRow() + 1][j] != BLACK) {
-					palabraParcial.append(String.format(".{%d}", interseccion.getLength() - palabraParcial.length()));
+					partialWord.append(String.format(".{%d}", intersection.getLength() - partialWord.length()));
 				}
 
 				
-				final String parcial = palabraParcial.toString();
-				if (!words.get(interseccion.getLength()).parallelStream().anyMatch(x -> !x.equals(candidate) && x.matches(parcial))) {
+				final String partial = partialWord.toString();
+				if (!words.get(intersection.getLength()).stream().anyMatch(x -> !x.equals(candidate) && x.matches(partial))) {
+					return false;
+				}
+				
+				if(partial.length() == intersection.getLength() && crossword.getBoardWords().stream().anyMatch(x -> x.getWord() != null && x.getWord().equals(partial))){
 					return false;
 				}
 			}
